@@ -1,0 +1,10 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+    <channel>
+        <title>Jin HaHa&#39;s blog</title>
+        <link>http://jqc8438.github.io/en/</link>
+        <description>Jin HaHa&#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>jqc8438@gmail.com (Jin Qunc)</managingEditor>
+            <webMaster>jqc8438@gmail.com (Jin Qunc)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+            <atom:link href="http://jqc8438.github.io/en/index.xml" rel="self" type="application/rss+xml" />
+        </channel>
+</rss>
