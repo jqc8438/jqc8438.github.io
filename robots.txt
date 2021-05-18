@@ -61,4 +61,4 @@ Disallow: /
 User-agent: ZoominfoBot
 Disallow: /
 
-Sitemap: http://jqc8438.github.io/zh-cn/sitemap.xml
+Sitemap: http://www.jqc8438.top/zh-cn/sitemap.xml

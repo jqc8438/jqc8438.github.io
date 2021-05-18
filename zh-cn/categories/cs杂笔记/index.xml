@@ -1,13 +1,13 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
     <channel>
         <title>cs杂笔记 - 分类 - Jin HaHa&#39;s blog</title>
-        <link>http://jqc8438.github.io/zh-cn/categories/cs%E6%9D%82%E7%AC%94%E8%AE%B0/</link>
+        <link>http://www.jqc8438.top/zh-cn/categories/cs%E6%9D%82%E7%AC%94%E8%AE%B0/</link>
         <description>cs杂笔记 - 分类 - Jin HaHa&#39;s blog</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>jqc8438@gmail.com (Jin Qunc)</managingEditor>
-            <webMaster>jqc8438@gmail.com (Jin Qunc)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 16 May 2021 19:20:32 &#43;0800</lastBuildDate><atom:link href="http://jqc8438.github.io/zh-cn/categories/cs%E6%9D%82%E7%AC%94%E8%AE%B0/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>jqc8438@gmail.com (Jin Qunc)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 16 May 2021 19:20:32 &#43;0800</lastBuildDate><atom:link href="http://www.jqc8438.top/zh-cn/categories/cs%E6%9D%82%E7%AC%94%E8%AE%B0/" rel="self" type="application/rss+xml" /><item>
     <title>[cs杂笔记]Git学习笔记</title>
-    <link>http://jqc8438.github.io/zh-cn/git_note/</link>
-    <pubDate>Sun, 16 May 2021 19:20:32 &#43;0800</pubDate><author>jqc8438@gmail.com</author><dc:creator>Jin Qunc</dc:creator><guid>http://jqc8438.github.io/zh-cn/git_note/</guid>
+    <link>http://www.jqc8438.top/zh-cn/git_note/</link>
+    <pubDate>Sun, 16 May 2021 19:20:32 &#43;0800</pubDate><author>jqc8438@gmail.com</author><dc:creator>Jin Qunc</dc:creator><guid>http://www.jqc8438.top/zh-cn/git_note/</guid>
     <description><![CDATA[学习git的笔记]]></description>
 </item></channel>
 </rss>

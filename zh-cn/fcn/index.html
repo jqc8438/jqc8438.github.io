@@ -8,19 +8,19 @@
         <title>[论文笔记]FCN - Jin HaHa&#39;s blog</title><meta name="description" content="原文：Fully Convolutional Networks for Semantic Segmentation "><meta property="og:title" content="[论文笔记]FCN" />
 <meta property="og:description" content="原文：Fully Convolutional Networks for Semantic Segmentation " />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://jqc8438.github.io/zh-cn/fcn/" /><meta property="og:image" content="http://jqc8438.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="og:url" content="http://www.jqc8438.top/zh-cn/fcn/" /><meta property="og:image" content="http://www.jqc8438.top/logo.png"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2020-09-27T14:09:10&#43;08:00" />
 <meta property="article:modified_time" content="2020-09-27T14:09:10&#43;08:00" />
 
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content="http://jqc8438.github.io/logo.png"/>
+<meta name="twitter:image" content="http://www.jqc8438.top/logo.png"/>
 
 <meta name="twitter:title" content="[论文笔记]FCN"/>
 <meta name="twitter:description" content="原文：Fully Convolutional Networks for Semantic Segmentation "/>
 <meta name="application-name" content="金哈哈的blog">
 <meta name="apple-mobile-web-app-title" content="金哈哈的blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://jqc8438.github.io/zh-cn/fcn/" /><link rel="prev" href="http://jqc8438.github.io/zh-cn/deeplabv3p/" /><link rel="next" href="http://jqc8438.github.io/zh-cn/hrnet/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.95ec0163754442eb1048a8ab1f905d6a004eee20a9076cca4c546e8376109e77.css" integrity="sha256-lewBY3VEQusQSKirH5BdagBO7iCpB2zKTFRug3YQnnc="><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><meta name="google-site-verification" content="tZaYD4DdnXIik8o9EAE95jWgBbvzgSVwXy85jN3BXfI" /><script type="application/ld+json">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://www.jqc8438.top/zh-cn/fcn/" /><link rel="prev" href="http://www.jqc8438.top/zh-cn/deeplabv3p/" /><link rel="next" href="http://www.jqc8438.top/zh-cn/hrnet/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.95ec0163754442eb1048a8ab1f905d6a004eee20a9076cca4c546e8376109e77.css" integrity="sha256-lewBY3VEQusQSKirH5BdagBO7iCpB2zKTFRug3YQnnc="><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><meta name="google-site-verification" content="tZaYD4DdnXIik8o9EAE95jWgBbvzgSVwXy85jN3BXfI" /><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
@@ -28,13 +28,13 @@
         "inLanguage": "zh-CN",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/jqc8438.github.io\/zh-cn\/fcn\/"
+            "@id": "http:\/\/www.jqc8438.top\/zh-cn\/fcn\/"
         },"genre": "posts","keywords": "分割, 经典","wordcount":  1614 ,
-        "url": "http:\/\/jqc8438.github.io\/zh-cn\/fcn\/","datePublished": "2020-09-27T14:09:10+08:00","dateModified": "2020-09-27T14:09:10+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+        "url": "http:\/\/www.jqc8438.top\/zh-cn\/fcn\/","datePublished": "2020-09-27T14:09:10+08:00","dateModified": "2020-09-27T14:09:10+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "","logo": {
                     "@type": "ImageObject",
-                    "url": "http:\/\/jqc8438.github.io\/images\/avatar.png",
+                    "url": "http:\/\/www.jqc8438.top\/images\/avatar.png",
                     "width":  640 ,
                     "height":  640 
                 }},"author": {
@@ -225,7 +225,7 @@
         <div class="post-info-line">
             <div class="post-info-md"></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://jqc8438.github.io/zh-cn/fcn/" data-title="[论文笔记]FCN" data-hashtags="分割,经典"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://jqc8438.github.io/zh-cn/fcn/" data-hashtag="分割"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://jqc8438.github.io/zh-cn/fcn/" data-title="[论文笔记]FCN"><i class="fab fa-hacker-news fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://jqc8438.github.io/zh-cn/fcn/" data-title="[论文笔记]FCN"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/line.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://jqc8438.github.io/zh-cn/fcn/" data-title="[论文笔记]FCN"><i class="fab fa-weibo fa-fw"></i></a></span>
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://www.jqc8438.top/zh-cn/fcn/" data-title="[论文笔记]FCN" data-hashtags="分割,经典"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://www.jqc8438.top/zh-cn/fcn/" data-hashtag="分割"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="http://www.jqc8438.top/zh-cn/fcn/" data-title="[论文笔记]FCN"><i class="fab fa-hacker-news fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://www.jqc8438.top/zh-cn/fcn/" data-title="[论文笔记]FCN"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@2.14.0/icons/line.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://www.jqc8438.top/zh-cn/fcn/" data-title="[论文笔记]FCN"><i class="fab fa-weibo fa-fw"></i></a></span>
             </div>
         </div>
     </div>
