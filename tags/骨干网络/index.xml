@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+    <channel>
+        <title>骨干网络 - 标签 - 金哈哈的博客</title>
+        <link>http://jqc8438.github.io/tags/%E9%AA%A8%E5%B9%B2%E7%BD%91%E7%BB%9C/</link>
+        <description>骨干网络 - 标签 - 金哈哈的博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 09 Sep 2020 14:09:10 &#43;0800</lastBuildDate><atom:link href="http://jqc8438.github.io/tags/%E9%AA%A8%E5%B9%B2%E7%BD%91%E7%BB%9C/" rel="self" type="application/rss+xml" /><item>
+    <title>【论文笔记】DenseNet</title>
+    <link>http://jqc8438.github.io/2020/09/densenet/</link>
+    <pubDate>Wed, 09 Sep 2020 14:09:10 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2020/09/densenet/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/DenseNet.png" referrerpolicy="no-referrer">
+            </div>Densely Connected Convolutional Networks]]></description>
+</item></channel>
+</rss>

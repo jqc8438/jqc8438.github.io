@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>【论文笔记】MobileNet - 金哈哈的博客</title><meta name="description" content="MobileNets是为移动和嵌入式设备提出的高效模型，包括v1-v3"><meta property="og:title" content="【论文笔记】MobileNet" />
+<meta property="og:description" content="MobileNets是为移动和嵌入式设备提出的高效模型，包括v1-v3" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jqc8438.github.io/2021/10/mobilenet/" /><meta property="og:image" content="http://jqc8438.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-10-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-10-28T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://jqc8438.github.io/logo.png"/>
+
+<meta name="twitter:title" content="【论文笔记】MobileNet"/>
+<meta name="twitter:description" content="MobileNets是为移动和嵌入式设备提出的高效模型，包括v1-v3"/>
+<meta name="application-name" content="jinhaha">
+<meta name="apple-mobile-web-app-title" content="jinhaha"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://jqc8438.github.io/2021/10/mobilenet/" /><link rel="prev" href="http://jqc8438.github.io/2021/10/numpy/" /><link rel="next" href="http://jqc8438.github.io/2021/10/lvm/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "【论文笔记】MobileNet",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/jqc8438.github.io\/2021\/10\/mobilenet\/"
+        },"genre": "posts","keywords": "轻量级网络, MobileNet","wordcount":  3669 ,
+        "url": "http:\/\/jqc8438.github.io\/2021\/10\/mobilenet\/","datePublished": "2021-10-28T00:00:00+00:00","dateModified": "2021-10-28T00:00:00+00:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "jinhaha"
+            },"description": "MobileNets是为移动和嵌入式设备提出的高效模型，包括v1-v3"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">('true' === 'true' && window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">【论文笔记】MobileNet</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>jinhaha</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"><i class="far fa-folder fa-fw"></i>论文笔记</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-10-28">2021-10-28</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3669 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 8 分钟&nbsp;</div>
+        </div><div class="featured-image"><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/MobileNet.png"
+        data-srcset="/images/MobileNet.png, /images/MobileNet.png 1.5x, /images/MobileNet.png 2x"
+        data-sizes="auto"
+        alt="/images/MobileNet.png"
+        title="MobileNets是为移动和嵌入式设备提出的高效模型，包括v1-v3" /></div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-概要">1. 概要</a></li>
+        <li><a href="#2-mobilenet结构">2. MobileNet结构</a></li>
+        <li><a href="#3-深度可分离卷积">3. 深度可分离卷积</a>
+          <ul>
+            <li><a href="#31-从参数量计算量和速度来对比普通卷积和深度可分离卷积">3.1 从参数量、计算量和速度来对比普通卷积和深度可分离卷积</a></li>
+            <li><a href="#32-关于速度roofline-model">3.2 关于速度（Roofline Model）</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-关于mobilenet的超参数">4. 关于MobileNet的超参数</a>
+          <ul>
+            <li><a href="#41-宽度超参数">4.1 宽度超参数</a></li>
+          </ul>
+        </li>
+        <li><a href="#5-mobilenet的改进v2和v3">5. MobileNet的改进v2和v3</a>
+          <ul>
+            <li><a href="#５1-mobilenet-v2">５.1 MobileNet v2</a></li>
+            <li><a href="#５2-mobilenet-v3">５.2 MobileNet v3</a></li>
+          </ul>
+        </li>
+        <li><a href="#6代码">6.代码</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p><strong>v1</strong></p>
+<p><strong>Paper:</strong> Howard, Andrew G., Menglong Zhu, Bo Chen, Dmitry Kalenichenko, Weijun Wang, Tobias Weyand, Marco Andreetto, and Hartwig Adam. &ldquo;Mobilenets: Efficient convolutional neural networks for mobile vision applications.&rdquo; <em>arXiv preprint arXiv:1704.04861</em> (2017).</p>
+<p><strong>remark</strong>：轻量级重要backbone google</p>
+<p><strong>cited by</strong>： 10124</p>
+<hr>
+<p><strong>v2</strong></p>
+<p><strong>Paper:</strong> Sandler, Mark, Andrew Howard, Menglong Zhu, Andrey Zhmoginov, and Liang-Chieh Chen. &ldquo;Mobilenetv2: Inverted residuals and linear bottlenecks.&rdquo; In <em>Proceedings of the IEEE conference on computer vision and pattern recognition</em>, pp. 4510-4520. 2018.</p>
+<p><strong>remark</strong>：v1上的改进，引入残差</p>
+<p><strong>cited by</strong>： 6701</p>
+<hr>
+<p><strong>v3</strong></p>
+<p><strong>Paper:</strong> Howard, Andrew, Mark Sandler, Grace Chu, Liang-Chieh Chen, Bo Chen, Mingxing Tan, Weijun Wang et al. &ldquo;Searching for mobilenetv3.&rdquo; In <em>Proceedings of the IEEE/CVF International Conference on Computer Vision</em>, pp. 1314-1324. 2019.</p>
+<p><strong>remark</strong>：引入了NAS，SE，h-swish</p>
+<p><strong>cited by</strong>： 1282</p>
+<h3 id="1-概要">1. 概要</h3>
+<p>模型的主要动机还是在于在希望在网络的大小和速度上能更高效，再者现实生活中很多嵌入式设备的算力不足以支撑大型的网络，不能支持实时计算。</p>
+<p>轻量研究的路径：</p>
+<ul>
+<li>模型压缩：先训练好一个网络，再通过相关方法使得模型变小（蒸馏、减枝等等）</li>
+<li>直接训练一个小网络（mobilenet、shufflenet等等对网络结构的设计）</li>
+</ul>
+<p>MobileNets 主要基于深度可分离卷积构成，通过设置两个超参数（宽度和分辨率），平衡了准确率和速度。</p>
+<h3 id="2-mobilenet结构">2. MobileNet结构</h3>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211025213700.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211025213700.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211025213700.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211025213700.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211025213700.png"
+        title="MobileNet结构" /></p>
+<p>深度可分离卷积的设计：每一次深度卷积或者点卷积的后面，都要跟上BN和ReLU。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211025213829.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211025213829.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211025213829.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211025213829.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211025213829.png"
+        title="深度可分离卷积" /></p>
+<h3 id="3-深度可分离卷积">3. 深度可分离卷积</h3>
+<p>深度可分离卷积是moblienet中最为至关重要的部分，它是控制模型走向”轻量“的关键。</p>
+<p>深度可分离卷积（Depthwise Separable Convolution，DSC）的过程可以分为深度卷积（Depthwise  Convolution）和点卷积（Pointwise Convolution）两个部分。他的示意图为：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211026162656799.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211026162656799.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211026162656799.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211026162656799.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211026162656799.png"
+        title="深度可分离卷积" /></p>
+<p><strong>举个例子</strong></p>
+<p>假设现有一个输入的尺寸为CxHxW，C为通道数，h和w为图像尺寸。希望通过卷积操作得到一个NxHxW的输出，也就是说希望去改变通道数量。假设使用3x3的卷积核尺寸，那么对比普通卷积和DSC来看:</p>
+<p>若是普通卷积，就需要N个卷积核为3x3xC的卷积核来完成这个操作，所涉及的卷积核参数量便是3x3xCxN = 9CN。</p>
+<p>若是深度可分离卷积，对于输入的每一个通道都分别使用一个3x3的卷积核，便是C个3x3的卷积核（这一步就是深度卷积，涉及的参数量是Cx3x3）。此时得到输出其实是和输入一样的，若要得到通道为N的输出，就再使用一次1x1卷积操作进行变通道到N通道（这一步就是点卷积的操作，涉及的参数量是Nx1x1）。于是总的参数量便是Cx3x3+Nx1x1=9C+N &laquo; 9CN</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211026163041238.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211026163041238.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211026163041238.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211026163041238.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211026163041238.png"
+        title="深度可分离卷积" /></p>
+<p>深度卷积对每一个通道只使用了一个卷积核，所以每一个通道都会对应的去输出一个通道。而点卷积的作用就在于将它们进行融合，这个融合的过程中，可能是提升也可能是降低这个通道的数量。深度卷积用来滤波，点卷积用来融合。</p>
+<h4 id="31-从参数量计算量和速度来对比普通卷积和深度可分离卷积">3.1 从参数量、计算量和速度来对比普通卷积和深度可分离卷积</h4>
+<p><strong>计算复杂度&ndash;普通卷积</strong></p>
+<p>首先定义$D_k$是卷积核的尺寸，输入特征的尺寸为$M \times D_{F} \times D_{F}$，其中$M$为输入的通道数，$D_{F}$为输入特征图的尺寸，输出通道数为$N$</p>
+<p>于是对于一个普通卷积来讲，进行一个卷积核处理（也就是生成输出中的一个通道）它的计算量为：
+$$
+D_{k} \times D_{k} \times M \times D_{F} \times D_{F}
+$$
+因为最后需要生成的通道数量为N，所以需要进行N个卷积核的处理，于是计算量就是：
+$$
+D_{k} \times D_{k} \times N \times M \times D_{F} \times D_{F}
+$$</p>
+<p><strong>计算复杂度&ndash;深度可分离卷积</strong></p>
+<p>对于深度可分离卷积来讲，分为深度卷积和点卷积。在深度卷积中，相当于对于M通道中的每一个通道执行一次核为$1 \times D_k \times D_K$的卷积，其计算量为
+$$
+D_{k} \times D_{k} \times 1 \times D_{F} \times D_{F} \times M
+$$
+在点卷积中，用N个$M \times 1 \times 1$的卷积核来进行操作，可以得到N通道的输出，计算量为：
+$$
+1 \times 1 \times N \times D_{F} \times D_{F} \times M
+$$
+于是总的计算量为：
+$$
+D_{k} \times D_{k} \times D_{F} \times D_{F} \times M +  N \times D_{F} \times D_{F} \times M = D_{F} \times D_{F} \times M (D_{k} \times D_{k} + N )
+$$</p>
+<p><strong>计算复杂度对比</strong>
+$$
+\begin{aligned}
+&amp; \frac{D_{K} \cdot D_{K} \cdot M \cdot D_{F} \cdot D_{F}+M \cdot N \cdot D_{F} \cdot D_{F}}{D_{K} \cdot D_{K} \cdot M \cdot N \cdot D_{F} \cdot D_{F}} \
+=&amp; \frac{1}{N}+\frac{1}{D_{K}^{2}}  \approx \frac{1}{D_{K}^{2}}
+\end{aligned}
+$$
+如果使用3x3的卷积核，那么，计算复杂度的比值基本在1/9到1/8之间。</p>
+<p><strong>参数量&ndash;普通卷积</strong></p>
+<p>参数量主要是从卷积核的参数量来看。</p>
+<p>对于普通卷积来讲，需要N个$M \times D_{k} \times D_{k}$的卷积核来生成输出，所以参数总量为：
+$$
+N \times M \times D_{k} \times D_{k}
+$$</p>
+<p><strong>参数量&ndash;深度可分离卷积</strong></p>
+<p>对于深度卷积来讲，需要M个$1 \times D_{k} \times D_{k}$卷积核，参数量为：
+$$
+M \times D_{k} \times D_{k}
+$$
+对于点卷积来讲，需要N个$M \times 1 \times 1$卷积核，参数量为：
+$$
+N \times M \times 1 \times 1=N \times M
+$$
+总的参数量为：
+$$
+M \times D_{k} \times D_{k}+N \times M
+$$</p>
+<p><strong>参数量对比</strong></p>
+<p>常规卷积参数量和深度可分离卷积参数量的比值：
+$$
+\frac{N \times M \times D_{k} \times D_{k}}{M \times D_{k} \times D_{k}+N \times M}=\frac{1}{\frac{1}{N}+\frac{1}{D_{k}^{2}}} \approx D_{k}^{2}
+$$
+所以，一般也是9倍左右。</p>
+<h4 id="32-关于速度roofline-model">3.2 关于速度（Roofline Model）</h4>
+<p>在很多的gpu实验中，可能会发现mobilenet的速度比vgg还要慢，虽然参数量很小。但是在cpu上似乎moblie又能快。</p>
+<p>模型的运行速度不仅仅取决于模型本身，也与平台有很大的关系。并且有一套理论可以去解读它(Roofline Model)</p>
+<p><strong>Roofline Model 提出了使用 Operational Intensity（计算强度）进行定量分析的方法，并给出了模型在计算平台上所能达到理论计算性能上限公式。</strong></p>
+<p>具体可见：https://zhuanlan.zhihu.com/p/34204282</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>普通卷积</th>
+<th>深度可分离卷积</th>
+<th>比值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>计算量</td>
+<td>$D_{k} \times D_{k} \times N \times M \times D_{F} \times D_{F}$</td>
+<td>$D_{F} \times D_{F} \times M (D_{k} \times D_{k} + N )$</td>
+<td>$D_{k}^{2}$</td>
+</tr>
+<tr>
+<td>参数量</td>
+<td>$N \times M \times D_{k} \times D_{k}$</td>
+<td>$M \times D_{k} \times D_{k}+N \times M$</td>
+<td>$D_{k}^{2}$</td>
+</tr>
+<tr>
+<td>速度</td>
+<td>Roofline Model ，取决于平台</td>
+<td>Roofline Model ，取决于平台</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="4-关于mobilenet的超参数">4. 关于MobileNet的超参数</h3>
+<p>mobilenet通过超参数的设定来控制模型的大小</p>
+<h4 id="41-宽度超参数">4.1 宽度超参数</h4>
+<p>宽度超参数$\alpha$用于规范每一层channel数量的设置，常取[1, 0.75, 0.5, 0.25]</p>
+<p>算力消耗降为原来的$\alpha^2$倍。</p>
+<p>####　4.2 分辨率超参数</p>
+<p>分辨率超参数$\rho$，也就是将原来的输入图的尺寸降到$\rho \times DF$</p>
+<p>算力消耗降为原来的$\rho^2$倍。</p>
+<h3 id="5-mobilenet的改进v2和v3">5. MobileNet的改进v2和v3</h3>
+<h4 id="５1-mobilenet-v2">５.1 MobileNet v2</h4>
+<p>针对v1，v2的改进主要集中在两个方面，即Linear Bottleneck和Inverted Residuals。</p>
+<p>①Linear Bottleneck</p>
+<p>总结来说作者认为，对于浅层特征来讲，也就是特征通道数量较少的时候，使用ReLU激活会不好，这种非线性激活应该在高维度的情况下使用，就像图中所表示的，当维度小的时候（dim=2,3），relu的破坏性比较强。<strong>所以，作者在浅层的时候就考虑使用线性变化来代替非线性激活防止破坏浅层信息，于是就是所谓的linear bottleneck。其实这里的线性操作就是不带ReLU的1x1的卷积层</strong></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028111336.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028111336.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028111336.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028111336.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028111336.png"
+        title="MobileNet v2" /></p>
+<p>②Inverted Residuals</p>
+<p>对于resnet中的残差连接来讲，设计的是一个1x1-&gt;3x3-&gt;1x1的流程，第一个1x1的卷积是为了降通道然后再进行3x3的特征提取卷积，最后通过1x1卷积恢复。这样可以减少参数量。而在mobilenetv2中，第一个1x1卷积是为了加深通道的，这就是逆的说法。</p>
+<img src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028143006.png" alt="MobileNet v2" style="zoom: 50%;" />
+<p>包括可以发现，深度可分离卷积的第二个1x1卷积后面是不加relu的，3x3卷积后面加的是ReLU6（&gt;6为6）。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028143149.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028143149.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028143149.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028143149.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028143149.png"
+        title="MobileNet v2" /></p>
+<p>整体就是由这些bottleneck块来组成：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028143337.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028143337.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028143337.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028143337.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028143337.png"
+        title="MobileNet v2" /></p>
+<h4 id="５2-mobilenet-v3">５.2 MobileNet v3</h4>
+<p>v3在v1和v2的基础上进行了改进。NAS的确不懂，等待学习，就把能看懂的改进先写一下吧~~</p>
+<p>v1和v2的基础：依然使用了v1中的深度可分离卷积；依然使用v2中的倒残差结构。</p>
+<p>改进：使用了NAS？（待学习）；引入了SE 注意力block；使用激活函数h-swish</p>
+<p>①SE block可见 <a href="https://zhuanlan.zhihu.com/p/334349672" target="_blank" rel="noopener noreferrer">https://zhuanlan.zhihu.com/p/334349672</a></p>
+<p>②h-swish基于swish的：</p>
+<p>swish的公式为：
+$$
+f(x)=x \cdot \operatorname{sigmoid}(\beta x)
+$$
+<img src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028145137.png" style="zoom: 67%;" /></p>
+<p>swish的作者提出swish比relu更好，但是sigmoid在移动端可能不是很友好，于是就改进为h-swish，也就是用relu6代替sigmoid：
+$$
+\mathrm{h}-\operatorname{swish}[x]=x \frac{\operatorname{ReLU} 6(x+3)}{6}
+$$
+<img src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20211028150812.png" alt="swish" style="zoom:67%;" /></p>
+<p>从图中也可以看出，已经非常的近似了。</p>
+<p>感觉目前很多模块验证轻量级效果的时候，都是使用的mobilev3，可见还是有很多的实际应用场景的。</p>
+<h3 id="6代码">6.代码</h3>
+<p>v1中深度可分离卷积：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="c1">#深度卷积，一个卷积核对应一个输入特征通道，分组卷积</span>
+<span class="k">class</span> <span class="nc">dw_conv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_dim</span><span class="p">,</span> <span class="n">out_dim</span><span class="p">,</span> <span class="n">stride</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">dw_conv</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dw_conv_k3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span>
+            <span class="n">in_dim</span><span class="p">,</span> <span class="n">out_dim</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">in_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1">#深度卷积是通过分组卷积来实现的，组的数量就是输入通道数量，这样就能对应每一个通道进行各自的卷积了。</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">out_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dw_conv_k3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+    
+<span class="c1">#逐点卷积 卷积核size为1x1</span>
+<span class="k">class</span> <span class="nc">point_conv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_dim</span><span class="p">,</span> <span class="n">out_dim</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">point_conv</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_conv_k1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_dim</span><span class="p">,</span> <span class="n">out_dim</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1">##直接通过1x1的卷积来实现点卷积</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">out_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_conv_k1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>v2-v3中的InvertedResidual</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">InvertedResidual</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">oup</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">use_se</span><span class="p">,</span> <span class="n">use_hs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">InvertedResidual</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">stride</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">identity</span> <span class="o">=</span> <span class="n">stride</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">inp</span> <span class="o">==</span> <span class="n">oup</span>
+
+        <span class="k">if</span> <span class="n">inp</span> <span class="o">==</span> <span class="n">hidden_dim</span><span class="p">:</span>    <span class="c1">#不变通道</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                <span class="c1"># dw</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="p">(</span><span class="n">kernel_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">),</span>
+                <span class="n">h_swish</span><span class="p">()</span> <span class="k">if</span> <span class="n">use_hs</span> <span class="k">else</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>   <span class="c1">#v3中使用h_swish() 激活</span>
+                <span class="c1"># Squeeze-and-Excite</span>
+                <span class="n">SELayer</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">)</span> <span class="k">if</span> <span class="n">use_se</span> <span class="k">else</span> <span class="n">nn</span><span class="o">.</span><span class="n">Identity</span><span class="p">(),</span>  <span class="c1">#v3中引入的se激活块</span>
+                <span class="c1"># pw-linear</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">oup</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>  <span class="c1">##这一步后面是不加激活函数的</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">oup</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>  <span class="c1">#变通道</span>
+                <span class="c1"># pw</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>  
+                <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">),</span>
+                <span class="n">h_swish</span><span class="p">()</span> <span class="k">if</span> <span class="n">use_hs</span> <span class="k">else</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>   <span class="c1">#v3中使用h_swish() 激活</span>
+                <span class="c1"># dw</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="p">(</span><span class="n">kernel_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">),</span>
+                <span class="c1"># Squeeze-and-Excite</span>
+                <span class="n">SELayer</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">)</span> <span class="k">if</span> <span class="n">use_se</span> <span class="k">else</span> <span class="n">nn</span><span class="o">.</span><span class="n">Identity</span><span class="p">(),</span>    <span class="c1">#v3中引入的se激活块</span>
+                <span class="n">h_swish</span><span class="p">()</span> <span class="k">if</span> <span class="n">use_hs</span> <span class="k">else</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> 
+                <span class="c1"># pw-linear</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">oup</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>    <span class="c1">##这一步后面是不加激活函数的</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">oup</span><span class="p">),</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">identity</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        
+<span class="c1">## 激活函数</span>
+<span class="k">class</span> <span class="nc">h_sigmoid</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">h_sigmoid</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU6</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="n">inplace</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mi">6</span>
+
+
+<span class="k">class</span> <span class="nc">h_swish</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">h_swish</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigmoid</span> <span class="o">=</span> <span class="n">h_sigmoid</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="n">inplace</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-10-28</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://jqc8438.github.io/2021/10/mobilenet/" data-title="【论文笔记】MobileNet" data-hashtags="轻量级网络,MobileNet"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://jqc8438.github.io/2021/10/mobilenet/" data-hashtag="轻量级网络"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://jqc8438.github.io/2021/10/mobilenet/" data-title="【论文笔记】MobileNet" data-image="/images/MobileNet.png"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://jqc8438.github.io/2021/10/mobilenet/" data-title="【论文笔记】MobileNet" data-description="MobileNets是为移动和嵌入式设备提出的高效模型，包括v1-v3"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="http://jqc8438.github.io/2021/10/mobilenet/" data-title="【论文笔记】MobileNet"><i data-svg-src="/lib/simple-icons/icons/baidu.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://jqc8438.github.io/2021/10/mobilenet/" data-title="【论文笔记】MobileNet"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%BD%91%E7%BB%9C/">轻量级网络</a>,&nbsp;<a href="/tags/mobilenet/">MobileNet</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/2021/10/numpy/" class="prev" rel="prev" title="【Python】Python-Numpy"><i class="fas fa-angle-left fa-fw"></i>【Python】Python-Numpy</a>
+            <a href="/2021/10/lvm/" class="next" rel="next" title="【Linux学习】Linux-LVM">【Linux学习】Linux-LVM<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.89.4">Hugo</a> 驱动 | 主题 - <a href="https://github.com/sunt-programator/CodeIT" target="_blank" rel="noopener noreferrer" title="CodeIT 0.2.10"><i class="fas fa-laptop-code fa-fw"></i> CodeIT</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">jinhaha</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

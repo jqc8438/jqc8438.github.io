@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>【论文笔记】Attention U-Net - 金哈哈的博客</title><meta name="description" content="Attention U-Net:Learning Where to Look for the Pancreas"><meta property="og:title" content="【论文笔记】Attention U-Net" />
+<meta property="og:description" content="Attention U-Net:Learning Where to Look for the Pancreas" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jqc8438.github.io/2020/12/attunet/" /><meta property="og:image" content="http://jqc8438.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-12-05T09:46:59+08:00" />
+<meta property="article:modified_time" content="2020-12-05T09:46:59+08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://jqc8438.github.io/logo.png"/>
+
+<meta name="twitter:title" content="【论文笔记】Attention U-Net"/>
+<meta name="twitter:description" content="Attention U-Net:Learning Where to Look for the Pancreas"/>
+<meta name="application-name" content="jinhaha">
+<meta name="apple-mobile-web-app-title" content="jinhaha"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://jqc8438.github.io/2020/12/attunet/" /><link rel="prev" href="http://jqc8438.github.io/2020/11/ocr/" /><link rel="next" href="http://jqc8438.github.io/2020/12/senet/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "【论文笔记】Attention U-Net",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/jqc8438.github.io\/2020\/12\/attunet\/"
+        },"genre": "posts","keywords": "语义分割, 医学图像, 注意力机制, 空间注意力","wordcount":  2178 ,
+        "url": "http:\/\/jqc8438.github.io\/2020\/12\/attunet\/","datePublished": "2020-12-05T09:46:59+08:00","dateModified": "2020-12-05T09:46:59+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "jinhaha"
+            },"description": "Attention U-Net:Learning Where to Look for the Pancreas"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">('true' === 'true' && window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">【论文笔记】Attention U-Net</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>jinhaha</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"><i class="far fa-folder fa-fw"></i>论文笔记</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-12-05">2020-12-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2178 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
+        </div><div class="featured-image"><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/attunet.png"
+        data-srcset="/images/attunet.png, /images/attunet.png 1.5x, /images/attunet.png 2x"
+        data-sizes="auto"
+        alt="/images/attunet.png"
+        title="Attention U-Net:Learning Where to Look for the Pancreas" /></div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#写在前面">写在前面</a>
+      <ul>
+        <li><a href="#注意力">注意力</a></li>
+        <li><a href="#unet需要attention的原因">unet需要attention的原因</a></li>
+      </ul>
+    </li>
+    <li><a href="#abstract">Abstract</a></li>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#methodogy">Methodogy</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p><strong>原文</strong>：Attention U-Net:Learning Where to Look for the Pancreas [Cited by 440]</p>
+<p><strong>论文链接</strong>: <a href="https://arxiv.org/abs/1804.03999" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/1804.03999</a></p>
+<p><strong>pytorch official code</strong>:  <a href="https://github.com/ozan-oktay/Attention-Gated-Networks" target="_blank" rel="noopener noreferrer">https://github.com/ozan-oktay/Attention-Gated-Networks</a></p>
+<p><strong>笔记时间</strong>：2020.12.5</p>
+<p>文章收录于在MIDL(Medical Imaging with Deep Learning)&lsquo;2018</p>
+<h2 id="写在前面">写在前面</h2>
+<p>方法部分感觉写的有点乱，如果有写不清楚的欢迎指出。我改~</p>
+<p>这篇文章应该是比较早的把软attention的思想引入到医学图像当中的。</p>
+<h3 id="注意力">注意力</h3>
+<p>注意力分为<strong>Hard Attention</strong>和 <strong>Soft Attention</strong></p>
+<p>硬注意力：一次选择一个图像的一个区域作为注意力，设成1，其他设为0。他是不能微分的，无法进行标准的反向传播，因此需要蒙特卡洛采样来计算各个反向传播阶段的精度。 考虑到精度取决于采样的完成程度，因此需要其他技术（例如强化学习）。</p>
+<p>软注意力：加权图像的每个像素。 高相关性区域乘以较大的权重，而低相关性区域标记为较小的权重。权重范围是（0-1）。他是可微的，可以正常进行反向传播。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20200518201826986.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20200518201826986.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20200518201826986.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20200518201826986.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/20200518201826986.png"
+        title="img" /></p>
+<p>观察上图，这是一个图像生成标题的任务。上面是soft 下面是hard，我们可以看到，soft attention的权重是每次被放置在整张图像上，注意力关注的部分（越白）的数值越接近1，越黑越接近0</p>
+<h3 id="unet需要attention的原因">unet需要attention的原因</h3>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/1_P8_bEkGZ_wtCjqkcugaTmw.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/1_P8_bEkGZ_wtCjqkcugaTmw.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/1_P8_bEkGZ_wtCjqkcugaTmw.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/1_P8_bEkGZ_wtCjqkcugaTmw.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/1_P8_bEkGZ_wtCjqkcugaTmw.png"
+        title="1_P8_bEkGZ_wtCjqkcugaTmw" /></p>
+<p>在传统的unet中，为了避免在decoder时丢失大量的空间精确细节信息，使用了skip的手法，直接将encoder中提取的map直接concat到decoder相对应的层。但是，提取的low-level feature有很多的冗余信息（刚开始提取的特征不是很好）。</p>
+<p><strong>软注意力的使用，可以有效抑制无关区域中的激活，减少冗余的部分的skip</strong>。</p>
+<h2 id="abstract">Abstract</h2>
+<p>开题点睛，创新点在于提出了一种注意力门attention gate (AG)模型。用该模型进行训练时，能过抑制模型学习与任务无关的部分，同时加重学习与任务有关的特征。（集中注意力到有用的地方，提取有用的东西，甩掉没用的东西）</p>
+<p>AG即插即用，可以直接集成到网络模型当中。</p>
+<h2 id="introduction">Introduction</h2>
+<p>在医学分割中，当目标器官形状和大小在不同患者间差异较大时。还是需要多级级联cnn。胆识级联模型中所有模型都会重复的提取相似的低级特征。</p>
+<p>如果使用文章所提的attention gate的方法，就可以代替，级联网络的使用。能够注意与学习任务有关的特征。</p>
+<h2 id="methodogy">Methodogy</h2>
+<p>文章中用了不少数学公式来讲方法，并且时3D形式的。这里结合2D的代码来看看是怎么实现这个注意力门的。</p>
+<p>代码参考：https://github.com/LeeJunHyun/Image_Segmentation</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python">    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+        <span class="c1"># encoding path</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1">#1*3*512*512 -&gt;conv(3,64)-&gt;conv(64,64)-&gt; 1*64*512*512</span>
+
+        <span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Maxpool</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span> <span class="c1">#1*64*512*512 -&gt; 1*64*256*256</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Conv2</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>  <span class="c1">#1*64*256*256 -&gt;conv(64,128)-&gt;conv(128,128)-&gt; 1*128*256*256</span>
+        <span class="n">x3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Maxpool</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span> <span class="c1">#1*128*256*256 -&gt; 1*128*128*128</span>
+        <span class="n">x3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Conv3</span><span class="p">(</span><span class="n">x3</span><span class="p">)</span> <span class="c1">#1*128*128*128 -&gt;conv(128,256)-&gt;conv(256,256)-&gt;  1*256*128*128</span>
+
+        <span class="n">x4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Maxpool</span><span class="p">(</span><span class="n">x3</span><span class="p">)</span><span class="c1">#1*256*128*128 -&gt; 1*256*64*64</span>
+        <span class="n">x4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Conv4</span><span class="p">(</span><span class="n">x4</span><span class="p">)</span> <span class="c1">#1*256*64*64 -&gt;conv(256,512)-&gt;conv(512,512)-&gt; 1*512*64*64</span>
+
+        <span class="n">x5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Maxpool</span><span class="p">(</span><span class="n">x4</span><span class="p">)</span><span class="c1">#1*512*64*64 -&gt; 1*512*32*32</span>
+        <span class="n">x5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Conv5</span><span class="p">(</span><span class="n">x5</span><span class="p">)</span> <span class="c1">#1*512*32*32-&gt;conv(512,1024)-&gt;conv(1024,1024)-&gt; 1*1024*32*32</span>
+
+        <span class="c1"># decoding + concat path</span>
+        <span class="n">d5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Up5</span><span class="p">(</span><span class="n">x5</span><span class="p">)</span>  <span class="c1">#1*1024*32*32 -&gt;Upsample-&gt; 1*1024*64*64 -&gt; conv(1024,512) -&gt;1*512*64*64</span>
+        <span class="n">x4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Att5</span><span class="p">(</span><span class="n">g</span><span class="o">=</span><span class="n">d5</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="n">x4</span><span class="p">)</span> <span class="c1">#2(1*512*64*64) -&gt; 1*1*64*64 -&gt;1*512*64*64</span>
+        <span class="n">d5</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">x4</span><span class="p">,</span><span class="n">d5</span><span class="p">),</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#1*1024*64*64       </span>
+        <span class="n">d5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Up_conv5</span><span class="p">(</span><span class="n">d5</span><span class="p">)</span>  <span class="c1">#1*1024*64*64 -&gt;conv(1024,512)-&gt;conv(512,512)-&gt; 1*512*64*64</span>
+        
+        <span class="n">d4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Up4</span><span class="p">(</span><span class="n">d5</span><span class="p">)</span>
+        <span class="n">x3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Att4</span><span class="p">(</span><span class="n">g</span><span class="o">=</span><span class="n">d4</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="n">x3</span><span class="p">)</span>
+        <span class="n">d4</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">x3</span><span class="p">,</span><span class="n">d4</span><span class="p">),</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">d4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Up_conv4</span><span class="p">(</span><span class="n">d4</span><span class="p">)</span>
+
+        <span class="n">d3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Up3</span><span class="p">(</span><span class="n">d4</span><span class="p">)</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Att3</span><span class="p">(</span><span class="n">g</span><span class="o">=</span><span class="n">d3</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="n">x2</span><span class="p">)</span>
+        <span class="n">d3</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">x2</span><span class="p">,</span><span class="n">d3</span><span class="p">),</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">d3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Up_conv3</span><span class="p">(</span><span class="n">d3</span><span class="p">)</span>
+
+        <span class="n">d2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Up2</span><span class="p">(</span><span class="n">d3</span><span class="p">)</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Att2</span><span class="p">(</span><span class="n">g</span><span class="o">=</span><span class="n">d2</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="n">x1</span><span class="p">)</span>
+        <span class="n">d2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">x1</span><span class="p">,</span><span class="n">d2</span><span class="p">),</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">d2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Up_conv2</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+
+        <span class="n">d1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Conv_1x1</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">d1</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上面的代码时forward的整体框架，unet的框架就不多做介绍，直接看attention的实现。对于一张输入为1x3x512x512（1是batchsize，3是通道）的2D图,执行到x5的时候（经过五次下采样）已经是最小的feature map了（1x1024x32x32）。对其进行上采样得到d5（1x512x64x64）。</p>
+<p>对d5和x4执行Att5(g=d5,x=x4)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="bp">self</span><span class="o">.</span><span class="n">Att5</span> <span class="o">=</span> <span class="n">Attention_block</span><span class="p">(</span><span class="n">F_g</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span><span class="n">F_l</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span><span class="n">F_int</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Attention_block</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">F_g</span><span class="p">,</span><span class="n">F_l</span><span class="p">,</span><span class="n">F_int</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Attention_block</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">W_g</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">F_g</span><span class="p">,</span> <span class="n">F_int</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">F_int</span><span class="p">)</span>
+            <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">W_x</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">F_l</span><span class="p">,</span> <span class="n">F_int</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">F_int</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">F_int</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">g1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W_g</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="c1">#1x512x64x64-&gt;conv(512，256)/B.N.-&gt;1x256x64x64</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W_x</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1">#1x512x64x64-&gt;conv(512，256)/B.N.-&gt;1x256x64x64</span>
+        <span class="n">psi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">g1</span><span class="o">+</span><span class="n">x1</span><span class="p">)</span><span class="c1">#1x256x64x64di</span>
+        <span class="n">psi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span><span class="c1">#得到权重矩阵  1x256x64x64 -&gt; 1x1x64x64 -&gt;sigmoid 结果到（0，1）</span>
+
+        <span class="k">return</span> <span class="n">x</span><span class="o">*</span><span class="n">psi</span> <span class="c1">#与low-level feature相乘，将权重矩阵赋值进去</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201205170502359.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201205170502359.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201205170502359.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201205170502359.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201205170502359.png"
+        title="image-20201205170502359" /></p>
+<p>x4是从上往下下采样得到的图。d5是x4下一层map上采样的图。要对d5和x4执行Att5(g=d5,x=x4)。</p>
+<p>图中的xl对应代码中的x4，g代表代码中的d5。（想象一下unet的图，xl就是左边的东西，g是右边的对应大小的东西）</p>
+<p>g（1x512x64x64）/  x4（1x512x64x64）</p>
+<p>注意力模块执行步骤：</p>
+<ol>
+<li>对g做1*1卷积得到 1x256x64x64</li>
+<li>对xl做1*1卷积得到 1x256x64x64</li>
+<li>讲1，2步结果相加（为什么要加起来呢？为了突出特征，如果在两个图中某个点两者都有，加起来，会更为突出）</li>
+<li>对第3步结果relu</li>
+<li>对第4步结果做conv(256,1)卷积,将256通道降到1通道。得到1x1x64x64的图</li>
+<li>对第5步结果进行sigmoid，使得值落在（0，1）区间，值越大，越是重点。（这个得到的就是注意力权重）</li>
+<li>这里因为图的大小一样，所以不需要resampler。</li>
+<li>最后和xl相乘，把注意力权重赋到low-level feature中。</li>
+</ol>
+<p>attention出来的结果在和上采样的结果（x4）进行concat（这里就和unet一样了。区别就是unet是skip的是直接过来的low-level feature，而我这里concat的是low-level feature是先经过注意力机制赋予权重（0-1）的map）</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201205173157070.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201205173157070.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201205173157070.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201205173157070.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201205173157070.png"
+        title="image-20201205173157070" /></p>
+<p>在上图中。在3、6、10和150个epoch时，其中红色突出显示较高的注意力。随着训练的进行，网络学会了专注于期望的区域。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://towardsdatascience.com/a-detailed-explanation-of-the-attention-u-net-b371a5590831" target="_blank" rel="noopener noreferrer">https://towardsdatascience.com/a-detailed-explanation-of-the-attention-u-net-b371a5590831</a></p></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-12-05</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://jqc8438.github.io/2020/12/attunet/" data-title="【论文笔记】Attention U-Net" data-hashtags="语义分割,医学图像,注意力机制,空间注意力"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://jqc8438.github.io/2020/12/attunet/" data-hashtag="语义分割"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://jqc8438.github.io/2020/12/attunet/" data-title="【论文笔记】Attention U-Net" data-image="/images/attunet.png"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://jqc8438.github.io/2020/12/attunet/" data-title="【论文笔记】Attention U-Net" data-description="Attention U-Net:Learning Where to Look for the Pancreas"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="http://jqc8438.github.io/2020/12/attunet/" data-title="【论文笔记】Attention U-Net"><i data-svg-src="/lib/simple-icons/icons/baidu.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://jqc8438.github.io/2020/12/attunet/" data-title="【论文笔记】Attention U-Net"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/">语义分割</a>,&nbsp;<a href="/tags/%E5%8C%BB%E5%AD%A6%E5%9B%BE%E5%83%8F/">医学图像</a>,&nbsp;<a href="/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/">注意力机制</a>,&nbsp;<a href="/tags/%E7%A9%BA%E9%97%B4%E6%B3%A8%E6%84%8F%E5%8A%9B/">空间注意力</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/2020/11/ocr/" class="prev" rel="prev" title="【论文笔记】OCR"><i class="fas fa-angle-left fa-fw"></i>【论文笔记】OCR</a>
+            <a href="/2020/12/senet/" class="next" rel="next" title="【论文笔记】SENet">【论文笔记】SENet<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.89.4">Hugo</a> 驱动 | 主题 - <a href="https://github.com/sunt-programator/CodeIT" target="_blank" rel="noopener noreferrer" title="CodeIT 0.2.10"><i class="fas fa-laptop-code fa-fw"></i> CodeIT</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">jinhaha</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

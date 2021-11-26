@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>【论文笔记】Deeplab v3&#43; - 金哈哈的博客</title><meta name="description" content="Encoder-Decoder with Atrous Separable Convolution for Semantic Image Segmentation"><meta property="og:title" content="【论文笔记】Deeplab v3&#43;" />
+<meta property="og:description" content="Encoder-Decoder with Atrous Separable Convolution for Semantic Image Segmentation" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jqc8438.github.io/2020/09/deeplabv3p/" /><meta property="og:image" content="http://jqc8438.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-09-23T14:09:10+08:00" />
+<meta property="article:modified_time" content="2020-09-23T14:09:10+08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://jqc8438.github.io/logo.png"/>
+
+<meta name="twitter:title" content="【论文笔记】Deeplab v3&#43;"/>
+<meta name="twitter:description" content="Encoder-Decoder with Atrous Separable Convolution for Semantic Image Segmentation"/>
+<meta name="application-name" content="jinhaha">
+<meta name="apple-mobile-web-app-title" content="jinhaha"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://jqc8438.github.io/2020/09/deeplabv3p/" /><link rel="prev" href="http://jqc8438.github.io/2020/09/densenet/" /><link rel="next" href="http://jqc8438.github.io/2020/09/fcn/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "【论文笔记】Deeplab v3+",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/jqc8438.github.io\/2020\/09\/deeplabv3p\/"
+        },"genre": "posts","keywords": "语义分割, Deeplab","wordcount":  1664 ,
+        "url": "http:\/\/jqc8438.github.io\/2020\/09\/deeplabv3p\/","datePublished": "2020-09-23T14:09:10+08:00","dateModified": "2020-09-23T14:09:10+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "jinhaha"
+            },"description": "Encoder-Decoder with Atrous Separable Convolution for Semantic Image Segmentation"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">('true' === 'true' && window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">【论文笔记】Deeplab v3&#43;</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>jinhaha</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"><i class="far fa-folder fa-fw"></i>论文笔记</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-09-23">2020-09-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1664 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="featured-image"><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/deeplabv3p.png"
+        data-srcset="/images/deeplabv3p.png, /images/deeplabv3p.png 1.5x, /images/deeplabv3p.png 2x"
+        data-sizes="auto"
+        alt="/images/deeplabv3p.png"
+        title="Encoder-Decoder with Atrous Separable Convolution for Semantic Image Segmentation" /></div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#abstract">Abstract</a></li>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#related--work">Related  Work</a></li>
+    <li><a href="#methods">Methods</a></li>
+    <li><a href="#experimental-evaluation">Experimental Evaluation</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+    <li><a href="#related--concepts">Related  Concepts</a>
+      <ul>
+        <li><a href="#1depthwise-separable-convolution">1.depthwise separable convolution</a></li>
+        <li><a href="#2atrous-convolution">2.atrous convolution</a></li>
+        <li><a href="#3改进版本的xception">3.改进版本的Xception</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>**原文：**Encoder-Decoder with Atrous Separable Convolution for Semantic Image Segmentation</p>
+<p><strong>论文链接</strong>: <a href="https://arxiv.org/abs/1802.02611" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/1802.02611</a></p>
+<p><strong>tensorflow 官方实现</strong>: <a href="https://github.com/tensorflow/models/tree/master/research/deeplab" target="_blank" rel="noopener noreferrer">https://github.com/tensorflow/models/tree/master/research/deeplab</a></p>
+<p><strong>pytorch github高星</strong>: <a href="https://github.com/jfzhang95/pytorch-deeplab-xception" target="_blank" rel="noopener noreferrer">https://github.com/jfzhang95/pytorch-deeplab-xception</a></p>
+<p>**笔记时间：**2020.9.23</p>
+<p>这是v3+，前面应该是有v1-v3的。</p>
+<p>（v1：修改了VGG16引入空洞卷积，v2：设计ASPP模块，v3：串联ASPP与并联ASPP，讨论了3x3卷积可能会丢失部分信息，提出了1x1卷积的必要性。v3+：使用小幅度修改的xception主网络，结合deeplab v3+作为encoder，自己设计decoder）</p>
+<p><strong>可能可以改进点（对于当时）：</strong></p>
+<p>①encoder拼接处本文是直接拼接的，可能可以采用其他的拼接手法（例如提取最重要的几个拼一下）</p>
+<p>②上采样使用反卷积不知道效果会不会有提升</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20200924124856907.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20200924124856907.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20200924124856907.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20200924124856907.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20200924124856907.png"
+        title="image-20200924124856907" /></p>
+<h2 id="abstract">Abstract</h2>
+<p>**金字塔模型（Atrous Spatial Pyramid Pooling，ASPP）：**可以提取多尺度特征信息（通过对输入进行不同rates不同观察域的提取，即atrous convolution  ）。</p>
+<p>**encode-decoder：**在获取边界信息上更加有效。</p>
+<p>本文结合两者的优点，提出了一种encoder-decoder，其中把DeepLabv3作为encoder，另外提出一个简单的结构作为decoder（为更好的提取边界信息）。</p>
+<p>本文在建立encoder和decoder的过程中利用了对Xception和depthwise separable convolution</p>
+<h2 id="introduction">Introduction</h2>
+<p>说了一下大背景，即用神经网络和卷积神经网络的方法解决图像问题。</p>
+<p>主要思想：<em>In this work, we consider two types of neural networks that use spatial pyramid pooling module [18,19,20] or encoder-decoder structure [21,22] for semantic segmentation, where the former one captures rich contextual information by pooling features at different resolution while the latter one is able to obtain sharp object boundaries.</em></p>
+<p>PSPNet：虽然能提供丰富的语意信息，边界的细节信息却会丢失。</p>
+<h2 id="related--work">Related  Work</h2>
+<p>(FCNs)&ndash;(PSP/CRF)&ndash;(本文)</p>
+<h2 id="methods">Methods</h2>
+<p>介绍了Atrous  convolution、Depthwise separable convolution、</p>
+<p>**encoder:**先是通过xception使得output strid=16，再进行ASPP。</p>
+<p>​			**ASPP：**一个1x1卷积 + 三个3x3卷积（rate={6，12，18}）+全局的平均池化</p>
+<p>**decoder：**先使encoder结果（bilinear）上采样4倍，再与encoder中出来的low_level_feature进行cat。在3x3卷积，再上采用4倍。</p>
+<p><em>ps：期间对 low_level_feature有个1x1降低通道的操作。</em></p>
+<p>**depthwise separable convolution：**减小卷积的参数数量和计算量</p>
+<p><strong>Xception的改变</strong>：</p>
+<ol>
+<li>更深的Xception结构， middle flow从迭代8次到迭代16次</li>
+<li>所有max pooling结构被stride=2的深度可分离卷积替代</li>
+<li>在3x3卷积后面额外的加上batch normalization标准化和ReLU激活</li>
+</ol>
+<h2 id="experimental-evaluation">Experimental Evaluation</h2>
+<p>用改进的Xception和ResNet-101预训练，讲了一下怎么训练。在各种测试集上的效果。</p>
+<p>decoder计：</p>
+<ol>
+<li>使用1x1卷积减少通道数目</li>
+<li>使用3x3卷积来获取分割结果</li>
+<li>使用了encode中半路提取的low-level features（128x128x128）用来进行cat</li>
+</ol>
+<h2 id="conclusion">Conclusion</h2>
+<p><em>&ldquo;Our proposed model \DeepLabv3+ employs the encoder-decoder structure where DeepLabv3 is used to encode the rich contextual information and a simple yet effective decoder module is adopted to recover the object boundaries. One could also apply the atrous convolution to extract the encoder features at an arbitrary resolution, depending on the available computation resources. We also explore the Xception model and atrous separable convolution to make the proposed model faster and stronger. Finally, our experimental results show that the proposed model sets a new state-of-the-art performance on PASCAL VOC 2012 and Cityscapes datasets.&quot;</em></p>
+<h2 id="related--concepts">Related  Concepts</h2>
+<h3 id="1depthwise-separable-convolution">1.depthwise separable convolution</h3>
+<p>例：同样要实现卷积，普通的卷积和深度可分离卷积的区别。深度可分离卷积拥有更小的参数量和计算量。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/844701369ab0346cb55785945a07a3a.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/844701369ab0346cb55785945a07a3a.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/844701369ab0346cb55785945a07a3a.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/844701369ab0346cb55785945a07a3a.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/844701369ab0346cb55785945a07a3a.png"
+        title="844701369ab0346cb55785945a07a3a" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/9e6a04f7fa67334176241679554d074.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/9e6a04f7fa67334176241679554d074.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/9e6a04f7fa67334176241679554d074.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/9e6a04f7fa67334176241679554d074.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/9e6a04f7fa67334176241679554d074.png"
+        title="9e6a04f7fa67334176241679554d074" /></p>
+<p>这里，普通卷积的参数量128x3x3x3=3456，而深度可分离卷积为3x3x3+1x1x3x128=411 &laquo; 3456</p>
+<h3 id="2atrous-convolution">2.atrous convolution</h3>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/14ec9e4b290e451fad28be61170b5dc1_th.gif"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/14ec9e4b290e451fad28be61170b5dc1_th.gif, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/14ec9e4b290e451fad28be61170b5dc1_th.gif 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/14ec9e4b290e451fad28be61170b5dc1_th.gif 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/14ec9e4b290e451fad28be61170b5dc1_th.gif"
+        title="14ec9e4b290e451fad28be61170b5dc1_th" /></p>
+<p><strong>扩张率(dilation rate)</strong></p>
+<p>在pytorch中的cov2d函数中可以设置<strong>dilation</strong>参数来进行。该参数定义了卷积核处理数据时各值的间距。</p>
+<p>上图所示的<strong>dilation=2</strong></p>
+<h3 id="3改进版本的xception">3.改进版本的Xception</h3>
+<ol>
+<li>更深的Xception结构， middle flow从迭代8次到迭代16次</li>
+<li>所有max pooling结构被stride=2的深度可分离卷积替代</li>
+<li>在3x3卷积后面额外的加上Batch Normalization标准化和ReLU激活</li>
+</ol>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20200924125754205.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20200924125754205.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20200924125754205.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20200924125754205.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20200924125754205.png"
+        title="image-20200924125754205" /></p></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-09-23</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://jqc8438.github.io/2020/09/deeplabv3p/" data-title="【论文笔记】Deeplab v3&#43;" data-hashtags="语义分割,Deeplab"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://jqc8438.github.io/2020/09/deeplabv3p/" data-hashtag="语义分割"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://jqc8438.github.io/2020/09/deeplabv3p/" data-title="【论文笔记】Deeplab v3&#43;" data-image="/images/deeplabv3p.png"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://jqc8438.github.io/2020/09/deeplabv3p/" data-title="【论文笔记】Deeplab v3&#43;" data-description="Encoder-Decoder with Atrous Separable Convolution for Semantic Image Segmentation"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="http://jqc8438.github.io/2020/09/deeplabv3p/" data-title="【论文笔记】Deeplab v3&#43;"><i data-svg-src="/lib/simple-icons/icons/baidu.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://jqc8438.github.io/2020/09/deeplabv3p/" data-title="【论文笔记】Deeplab v3&#43;"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/">语义分割</a>,&nbsp;<a href="/tags/deeplab/">Deeplab</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/2020/09/densenet/" class="prev" rel="prev" title="【论文笔记】DenseNet"><i class="fas fa-angle-left fa-fw"></i>【论文笔记】DenseNet</a>
+            <a href="/2020/09/fcn/" class="next" rel="next" title="【论文笔记】FCN">【论文笔记】FCN<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.89.4">Hugo</a> 驱动 | 主题 - <a href="https://github.com/sunt-programator/CodeIT" target="_blank" rel="noopener noreferrer" title="CodeIT 0.2.10"><i class="fas fa-laptop-code fa-fw"></i> CodeIT</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">jinhaha</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

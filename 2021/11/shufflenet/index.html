@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>【论文笔记】ShuffleNet - 金哈哈的博客</title><meta name="description" content="ShuffleNet是旷视科技最近提出的一种计算高效的CNN模型，包括v1和v2"><meta property="og:title" content="【论文笔记】ShuffleNet" />
+<meta property="og:description" content="ShuffleNet是旷视科技最近提出的一种计算高效的CNN模型，包括v1和v2" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jqc8438.github.io/2021/11/shufflenet/" /><meta property="og:image" content="http://jqc8438.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-11-10T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-11-10T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://jqc8438.github.io/logo.png"/>
+
+<meta name="twitter:title" content="【论文笔记】ShuffleNet"/>
+<meta name="twitter:description" content="ShuffleNet是旷视科技最近提出的一种计算高效的CNN模型，包括v1和v2"/>
+<meta name="application-name" content="jinhaha">
+<meta name="apple-mobile-web-app-title" content="jinhaha"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://jqc8438.github.io/2021/11/shufflenet/" /><link rel="prev" href="http://jqc8438.github.io/2021/11/miniconda/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "【论文笔记】ShuffleNet",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/jqc8438.github.io\/2021\/11\/shufflenet\/"
+        },"genre": "posts","keywords": "轻量级网络, ShuffleNet","wordcount":  2724 ,
+        "url": "http:\/\/jqc8438.github.io\/2021\/11\/shufflenet\/","datePublished": "2021-11-10T00:00:00+00:00","dateModified": "2021-11-10T00:00:00+00:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "jinhaha"
+            },"description": "ShuffleNet是旷视科技最近提出的一种计算高效的CNN模型，包括v1和v2"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">('true' === 'true' && window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">【论文笔记】ShuffleNet</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>jinhaha</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"><i class="far fa-folder fa-fw"></i>论文笔记</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-11-10">2021-11-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2724 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;</div>
+        </div><div class="featured-image"><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/ShuffleNet.png"
+        data-srcset="/images/ShuffleNet.png, /images/ShuffleNet.png 1.5x, /images/ShuffleNet.png 2x"
+        data-sizes="auto"
+        alt="/images/ShuffleNet.png"
+        title="ShuffleNet是旷视科技最近提出的一种计算高效的CNN模型，包括v1和v2" /></div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-概要">1. 概要</a></li>
+        <li><a href="#2-分组点卷积pointwise-group-convolution">2. 分组点卷积（pointwise group convolution）</a>
+          <ul>
+            <li><a href="#21-分组卷积group-convolution">2.1 分组卷积（group convolution）</a></li>
+            <li><a href="#22-点卷积pointwise-conv">2.2 点卷积（pointwise Conv）</a></li>
+            <li><a href="#23-分组点卷积pointwise-group-convolution">2.3 分组点卷积（pointwise group convolution）</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-通道重排channel-shuffle">3. 通道重排（Channel shuffle）</a></li>
+        <li><a href="#4-shufflenet">4. ShuffleNet</a></li>
+        <li><a href="#5-shufflenet代码">5. ShuffleNet代码</a></li>
+        <li><a href="#6-shufflenet--v2">6. ShuffleNet  v2</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p><strong>v1</strong></p>
+<p><strong>Paper:</strong> Zhang, Xiangyu, Xinyu Zhou, Mengxiao Lin, and Jian Sun. &ldquo;Shufflenet: An extremely efficient convolutional neural network for mobile devices.&rdquo; In <em>Proceedings of the IEEE conference on computer vision and pattern recognition</em>, pp. 6848-6856. 2018.</p>
+<p><strong>remark</strong>：Shuffle group</p>
+<p><strong>cited by</strong>： 3121</p>
+<hr>
+<p><strong>v2</strong></p>
+<p><strong>Paper:</strong> Ma, Ningning, Xiangyu Zhang, Hai-Tao Zheng, and Jian Sun. &ldquo;Shufflenet v2: Practical guidelines for efficient cnn architecture design.&rdquo; In <em>Proceedings of the European conference on computer vision (ECCV)</em>, pp. 116-131. 2018.</p>
+<p><strong>remark</strong>：v1上的改进</p>
+<p><strong>cited by</strong>： 1668</p>
+<h3 id="1-概要">1. 概要</h3>
+<p>Shufflenet和mobilenet是同年提出的工作，两者从两个不同的角度来分析卷积，尽量在降低计算量和参数量的情况下，保持卷积的使用效率。mobilenet通过深度可分离卷积来实现目的，而shufflenet利用了分组卷积来降低参数量，利用shuffle的操作来增强不同通道之间的交互和融合。</p>
+<h3 id="2-分组点卷积pointwise-group-convolution">2. 分组点卷积（pointwise group convolution）</h3>
+<h4 id="21-分组卷积group-convolution">2.1 分组卷积（group convolution）</h4>
+<p>分组卷积（Group Convolution）最早出现在AlexNet中。 当时使用分组卷积是因为一个GPU难以直接训练整个网络，所以使用分组卷积将卷积运算分配给多个GPU上进行计算。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110153932368.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110153932368.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110153932368.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110153932368.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110153932368.png"
+        title="分组卷积" /></p>
+<p>就如图所示，输入特征图的尺寸为$H \times W \times c_{1}$，输出特征图的尺寸为$H \times W \times c_{2}$。</p>
+<p>若是进行正常的卷积操作（图的上半部分），那么需要使用$c2$个尺寸为$h_{1} \times w_{1} \times c_{1}$的卷积核，那么参数量便是$h_{1} \times w_{1} \times c_{1} \times c_{2}$，这里的$h_{1} \times w_{1}$便是卷积核的尺寸。</p>
+<p>若是进行分组卷积操作（图的下半部分），首先需要将原输入按照通道数量先分成g个组。对于每个组来说，输入的尺寸便是$H \times W \times (c_{1}/g)$，相对应的每个组的输出尺寸应该是$H \times W \times (c_{2}/g)$。那么每个组需要使用$c2/g$个尺寸为$h_{1} \times w_{1} \times c_{1}/g$的卷积核，那么每组参数量便是$h_{1} \times w_{1} \times (c_{1}/g) \times(c_{2}/g)$，这样的操作需要进行g次，于是，总的参数量便是$h_{1} \times w_{1} \times (c_{1}/g) \times(c_{2}/g) \times g =h_{1} \times w_{1} \times c_{1} \times c_{2}/g$，也就是原来的正常卷积的$1/g$。每一组卷积的计算结果最后concat起来也就能达到c2的通道数。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110160036245.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110160036245.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110160036245.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110160036245.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110160036245.png"
+        title="分组卷积" /></p>
+<p>本质上来看，深度可分离卷积中的深度卷积就是一种特殊的分组卷积，只是说他的分组的组数正好和输入图像的通道数一致。</p>
+<h4 id="22-点卷积pointwise-conv">2.2 点卷积（pointwise Conv）</h4>
+<p>这里的点卷积也就是深度可分离卷积中的点卷积，也就是执行1x1卷积来融合所有通道上的信息。</p>
+<h4 id="23-分组点卷积pointwise-group-convolution">2.3 分组点卷积（pointwise group convolution）</h4>
+<p>论文的分组点卷积也就是说又点卷积又分组。也就是之前的分组卷积分析中，将卷积核的大小变为$1 \times 1$的卷积。但是这里的点卷积就不是贯通输入全通道了，而是贯通分组后的每一组的全通道。</p>
+<img src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110162146817.png" alt="分组点卷积" style="zoom: 50%;" />
+<h3 id="3-通道重排channel-shuffle">3. 通道重排（Channel shuffle）</h3>
+<p>分组点卷积本身可以大幅的降低模型的参数量，但是也存在这很大的问题。也就是组和组之间没有合理的交互。每个组都是一路自己管自己走下来的，和其他组之间丝毫没有交互。信息就比较阻塞，不能流动，特征表示也不会很好。于是就引入了shuffle的概念，也就是通过shuffle的方式，希望使得组和组形成交互。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110162838414.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110162838414.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110162838414.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110162838414.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110162838414.png"
+        title="通道重排" /></p>
+<p>也就是将前一次分组卷积的结果，进行规则的打乱，将打乱后混合的结果再输入到下一个分组卷积之中，就如图所示，这样不同组的通道就会混合起来。具体来说，将上一次分组卷积的结果中的每一个组中的通道，这些通道再进行排列，进入到下一个分组卷积。这种不同组之间通道的混乱排列， 称为channel shuffle 。</p>
+<h3 id="4-shufflenet">4. ShuffleNet</h3>
+<p>基于shuffle的思想，提出了两个unit，最后用来构造shufflenet。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110164231969.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110164231969.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110164231969.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110164231969.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110164231969.png"
+        title="ShuffleNet" /></p>
+<p>图中，a是一种带深度可分离卷积的bottleneck结构，b和c都是所提出的模块，其中c是在降图像分辨率时使用的。</p>
+<p>分析（b），可以看出，先做一个分组点卷积，再接上shuffle操作，然后进行一个3x3的深度可分离卷积，最后再进行一次分组点卷积。具体的实现可以看代码来进一步的分析。文章中涉及了不同的分组数（1，2，3，4，8）时的网络构架。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110172648050.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110172648050.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110172648050.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110172648050.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110172648050.png"
+        title="ShuffleNet" /></p>
+<h3 id="5-shufflenet代码">5. ShuffleNet代码</h3>
+<p>shufflenet中代码比较有趣的点就在于shuffle的实现，如何实现shuffle就是如何实现图中打乱的部分。实际上是利用了张量维度的变化来实现这一功能。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110172841241.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110172841241.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110172841241.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110172841241.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110172841241.png"
+        title="ShuffleNet" /></p>
+<p>具体来说，对于下面这个图来讲，现在是分成了三组，每个组里有四个小球，于是就通过先reshape再转置再展开的方式来实现最后的目的。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110173003576.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110173003576.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110173003576.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110173003576.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110173003576.png"
+        title="ShuffleNetcode" /></p>
+<p>对于通道数为c的输入，先将其拆分为g组，每组有n各通道。也就是说$c = g \times n$。</p>
+<ol>
+<li>
+<p>进行拆分 reshape  (c=g * n) -&gt; (g, n)</p>
+</li>
+<li>
+<p>进行转置 transpose  (g, n)  -&gt; (n, g)</p>
+</li>
+<li>
+<p>将其展开 flatten</p>
+</li>
+</ol>
+<p>具体的shuffle步骤的代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">shuffle_channels</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;shuffle channels of a 4-D Tensor&#34;&#34;&#34;</span>
+    <span class="n">batch_size</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">channels</span> <span class="o">%</span> <span class="n">groups</span> <span class="o">==</span> <span class="mi">0</span>   <span class="c1">##要确保channel能被组数整除</span>
+    <span class="n">channels_per_group</span> <span class="o">=</span> <span class="n">channels</span> <span class="o">//</span> <span class="n">groups</span>     <span class="c1">#每个组中的通道数</span>
+    <span class="c1"># split into groups</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">channels_per_group</span><span class="p">,</span>
+               <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>                        <span class="c1">#降通道拆分成组</span>
+    <span class="c1"># transpose 1, 2 axis</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>   <span class="c1">###进行转置</span>
+    <span class="c1"># reshape into orignal</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>ShuffleNet中stride=1的unit：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">ShuffleNetUnitA</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;ShuffleNet unit for stride=1&#34;&#34;&#34;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ShuffleNetUnitA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">in_channels</span> <span class="o">==</span> <span class="n">out_channels</span>
+        <span class="k">assert</span> <span class="n">out_channels</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="n">bottleneck_channels</span> <span class="o">=</span> <span class="n">out_channels</span> <span class="o">//</span> <span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="n">groups</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_conv1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="p">,</span> <span class="n">bottleneck_channels</span><span class="p">,</span>
+                                        <span class="mi">1</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>    
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">bottleneck_channels</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">depthwise_conv3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">bottleneck_channels</span><span class="p">,</span>
+                                         <span class="n">bottleneck_channels</span><span class="p">,</span>
+                                         <span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                         <span class="n">groups</span><span class="o">=</span><span class="n">bottleneck_channels</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn4</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">bottleneck_channels</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_conv5</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">bottleneck_channels</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">,</span>
+                                     <span class="mi">1</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">)</span>   
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn6</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">out_channels</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="c1">##第一个分组卷积</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bn2</span><span class="p">(</span><span class="n">out</span><span class="p">))</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">shuffle_channels</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span> <span class="c1">##进行shuffle</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">depthwise_conv3</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="c1">##进行3x3的深度可分离卷积</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn4</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_conv5</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="c1">##第二个分组卷积</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn6</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">out</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="6-shufflenet--v2">6. ShuffleNet  v2</h3>
+<p>在v2中，作者主要是探索了影响模型运算速度的其他指标，如访问代价（Memory Access Cost，MAC），GPU并行计算等。并得出了一些结论并对模型进行了相对应的改进。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110201519504.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110201519504.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110201519504.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110201519504.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110201519504.png"
+        title="ShuffleNetv2" /></p>
+<p>① <strong>当输入输出通道数相同时，MAC最小，运算速度最快</strong></p>
+<p>根据这一特性，设计了channel split，将输入通道分成两半，一边进入bottleneck，一边不操作，bottlenet里的深度可分离卷积就可以拥有相同的输入输出。最后是进行concat，而不是v1中的add。</p>
+<p>② <strong>分组卷积的使用，或者分组数g越大，会导致MAC变大</strong></p>
+<p>根据这一特性要考虑到谨慎的使用分组卷积，防止分组卷积的过度使用。在v2中，替换了分组点卷积为普通的点卷积。</p>
+<p>③ <strong>分支结构会产生碎片化会降低并行能力</strong></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110204035383.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110204035383.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110204035383.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110204035383.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20211110204035383.png"
+        title="ShuffleNetv2" /></p>
+<p>对于上图的各类设计，在FLOPs数量相同的情况下，按效率从高到低为(a) &gt; (b) &gt; (d) &gt; (c) &gt; (e)，可见分支结构的效率偏差。根据这一特性，考虑取消分组卷积。</p>
+<p>④ <strong>Element-wise操作是耗时的</strong></p>
+<p>Element-wise，如ReLU激活，偏置，单位加等。</p>
+<p>根据这一特性进行了channel split，合并的步骤变成了concat而不是相加了。</p>
+<p>v2整体上从模型运行速度这一实际的指标展开，通过严谨的数学证明和实际的硬件表现来得出一些影响速度的因素，进一步考虑到实际运行中的各个因素。</p></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-11-10</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://jqc8438.github.io/2021/11/shufflenet/" data-title="【论文笔记】ShuffleNet" data-hashtags="轻量级网络,ShuffleNet"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://jqc8438.github.io/2021/11/shufflenet/" data-hashtag="轻量级网络"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://jqc8438.github.io/2021/11/shufflenet/" data-title="【论文笔记】ShuffleNet" data-image="/images/ShuffleNet.png"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://jqc8438.github.io/2021/11/shufflenet/" data-title="【论文笔记】ShuffleNet" data-description="ShuffleNet是旷视科技最近提出的一种计算高效的CNN模型，包括v1和v2"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="http://jqc8438.github.io/2021/11/shufflenet/" data-title="【论文笔记】ShuffleNet"><i data-svg-src="/lib/simple-icons/icons/baidu.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://jqc8438.github.io/2021/11/shufflenet/" data-title="【论文笔记】ShuffleNet"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%BD%91%E7%BB%9C/">轻量级网络</a>,&nbsp;<a href="/tags/shufflenet/">ShuffleNet</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/2021/11/miniconda/" class="prev" rel="prev" title="【环境配置】Miniconda-不设环境变量/北外源"><i class="fas fa-angle-left fa-fw"></i>【环境配置】Miniconda-不设环境变量/北外源</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.89.4">Hugo</a> 驱动 | 主题 - <a href="https://github.com/sunt-programator/CodeIT" target="_blank" rel="noopener noreferrer" title="CodeIT 0.2.10"><i class="fas fa-laptop-code fa-fw"></i> CodeIT</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">jinhaha</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

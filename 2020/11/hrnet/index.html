@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>【论文笔记】HRNet - 金哈哈的博客</title><meta name="description" content="Deep high-resolution representation learning for visual recognition "><meta property="og:title" content="【论文笔记】HRNet" />
+<meta property="og:description" content="Deep high-resolution representation learning for visual recognition " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jqc8438.github.io/2020/11/hrnet/" /><meta property="og:image" content="http://jqc8438.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-11-19T21:35:13+08:00" />
+<meta property="article:modified_time" content="2020-11-19T23:54:00+08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://jqc8438.github.io/logo.png"/>
+
+<meta name="twitter:title" content="【论文笔记】HRNet"/>
+<meta name="twitter:description" content="Deep high-resolution representation learning for visual recognition "/>
+<meta name="application-name" content="jinhaha">
+<meta name="apple-mobile-web-app-title" content="jinhaha"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://jqc8438.github.io/2020/11/hrnet/" /><link rel="prev" href="http://jqc8438.github.io/2020/09/fcn/" /><link rel="next" href="http://jqc8438.github.io/2020/11/ocr/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "【论文笔记】HRNet",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/jqc8438.github.io\/2020\/11\/hrnet\/"
+        },"genre": "posts","keywords": "语义分割, 人体姿态估计, 高分辨率","wordcount":  5281 ,
+        "url": "http:\/\/jqc8438.github.io\/2020\/11\/hrnet\/","datePublished": "2020-11-19T21:35:13+08:00","dateModified": "2020-11-19T23:54:00+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "jinhaha"
+            },"description": "Deep high-resolution representation learning for visual recognition "
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">('true' === 'true' && window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">【论文笔记】HRNet</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>jinhaha</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"><i class="far fa-folder fa-fw"></i>论文笔记</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-11-19">2020-11-19</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5281 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 11 分钟&nbsp;</div>
+        </div><div class="featured-image"><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/HRNet.png"
+        data-srcset="/images/HRNet.png, /images/HRNet.png 1.5x, /images/HRNet.png 2x"
+        data-sizes="auto"
+        alt="/images/HRNet.png"
+        title="Deep high-resolution representation learning for visual recognition " /></div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#写在前面">写在前面</a></li>
+    <li><a href="#abstract">Abstract</a></li>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#related-work">Related work</a></li>
+    <li><a href="#model">Model</a>
+      <ul>
+        <li><a href="#1parallel-multi-resolution-convolutions">1.parallel multi-resolution convolutions</a></li>
+        <li><a href="#2repeated-multi-resolution-fusions">2.repeated multi-resolution fusions</a></li>
+        <li><a href="#3representation-head">3.representation head</a></li>
+        <li><a href="#4组装起来">4.组装起来</a></li>
+      </ul>
+    </li>
+    <li><a href="#语义分割的应用">语义分割的应用</a></li>
+    <li><a href="#conclusions">Conclusions</a></li>
+    <li><a href="#关于代码">关于代码</a>
+      <ul>
+        <li><a href="#1残差块basicblock和bottleneck">1.残差块BasicBlock和Bottleneck</a></li>
+        <li><a href="#2basicblock左图">2.BasicBlock(左图)</a></li>
+        <li><a href="#3bottleneck右图">3.Bottleneck(右图)</a></li>
+        <li><a href="#4highresolutionmodule">4.HighResolutionModule</a>
+          <ul>
+            <li><a href="#41--_check_branches">4.1  _check_branches</a></li>
+            <li><a href="#42--_make_one_branch">4.2  _make_one_branch</a></li>
+            <li><a href="#43-_make_branches">4.3 _make_branches</a></li>
+            <li><a href="#44-_make_fuse_layers">4.4 _make_fuse_layers</a></li>
+          </ul>
+        </li>
+        <li><a href="#5highresolutionnet">5.HighResolutionNet</a></li>
+      </ul>
+    </li>
+    <li><a href="#手绘流程图">手绘流程图：</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p><strong>原文</strong>：Deep high-resolution representation learning for visual recognition</p>
+<p><strong>论文链接</strong>: <a href="https://arxiv.org/abs/1908.07919v2" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/1908.07919v2</a></p>
+<p><strong>pytorch official code</strong>: <a href="https://github.com/HRNet" target="_blank" rel="noopener noreferrer">https://github.com/HRNet</a></p>
+<p><strong>笔记时间</strong>：2020.11.22</p>
+<p>文章最早发表在了CVRP2019，后面被顶刊TPAMI录用。</p>
+<h2 id="写在前面">写在前面</h2>
+<p>之所以要看这篇文章，是先看了OCR，看代码的过程中碰到backbone是HRNet，HRNet搭配OCR达到了很好的结果。</p>
+<p>对目前所看到的语义分割相关的文章中可以发现，对于一个语义分割任务，首先会通过一个backbone获得一个分辨率较小的图（很多论文都会提到output stride，即输入图像尺寸经过一个网络后的尺寸的大小的比例），再对这个分辨率较小的图进行一些利用上下文语义信息的处理。</p>
+<p>backbone的任务不仅仅适用于语义分割，最早适用于分类网路的，同时在各种计算机视觉的任务中都是基本操作。由此，诞生了一些重要的网络，例如残差的resnet，轻量级的googlenet，vgg等等，同时也包括这篇HRNet。对于上下文语义处理的步骤，最早也是出现了包括deeplab和pspnet两个经典的方法，后面也有利用注意力机制的no-local和ccnet等等。包括和HRNet搭配使用的这个OCR。</p>
+<p>HRNet这是一篇SOTA的文章。对于视觉识别任务，包括姿态估计，语义分割等。一般的方法都是使用卷积神经网络进行不断地降采样，包括resnet和vggnet等，然后再恢复高分辨率。而HRnet的特点在于把串行的结构做成并行的，把降低分辨率的操作改成保持分辨率的操作。</p>
+<h2 id="abstract">Abstract</h2>
+<p>两个关键特点：</p>
+<p>1.高分辨率和低分辨率并行连接，同步推进。</p>
+<p>2.高低分辨率图之间不断地交换信息</p>
+<p>高分辨率图的存在使得空间上更加精准，低分辨率图的存在使得语义上更充分。</p>
+<h2 id="introduction">Introduction</h2>
+<p>对于一般的分类网络来讲，通过卷积逐渐缩小图像的空间尺寸，进一步用于分类。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122173238127.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122173238127.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122173238127.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122173238127.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122173238127.png"
+        title="image-20201122173238127" /></p>
+<p>对于位置敏感的计算机视觉任务是需要高分辨率表示的。hrnet在整个过程中保持高分辨率的表示。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122174135108.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122174135108.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122174135108.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122174135108.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122174135108.png"
+        title="image-20201122174135108" /></p>
+<p>网络由四个阶段组成。第n个阶段包含对应于n个分辨率的n个流。通过反复的交换平行流中的信息来进行重复进行多分辨率的融合。</p>
+<p>其他的高低分辨率融合都是通过融合low_level的高分率和低分辨率上采用获得的high_level高分辨率。而hrnet是在低分辨率的帮助下，多次融合高分辨率。</p>
+<p>HRNetV1：只输出从高分辨率卷积流计算的高分辨率表示。</p>
+<p>HRNetV2：结合了所有从高到底分辨率的并行流的表示。</p>
+<p>HRNetV2p：从HRNetV2的高分辨率输出构建出multi-level representation。</p>
+<h2 id="related-work">Related work</h2>
+<p><strong>学习低分辨表示</strong>：以FCN为代表，移除分类网络的全连接层。得到的低分辨率表示来获得粗略估计图，通过结合low_level的中分辨率层来达到相对精细的分割。之后的改进包括deeplab和pspnet。</p>
+<p><strong>恢复高分辨率表示</strong>：通过上采用过程来恢复高分辨率表示，segnet，unet，encoder-decoder，不对称上采样等等。</p>
+<p><strong>保持高分辨率表示</strong></p>
+<p><strong>多尺度融合</strong></p>
+<h2 id="model">Model</h2>
+<p>先通过2个3*3卷积降到1/4的resolution。</p>
+<p>由几部分组成：</p>
+<ul>
+<li>parallel multi-resolution convolutions</li>
+<li>repeated multi-resolution fusions</li>
+<li>representation head</li>
+</ul>
+<h3 id="1parallel-multi-resolution-convolutions">1.parallel multi-resolution convolutions</h3>
+<p>用一个并行卷积流的方法，从第一阶段开始，逐步逐个添加高分辨到低分辨率的流。后一个阶段的并行流的分辨率由前一个阶段的分辨率和更低分辨率组成。</p>
+<p>看论文这段话说的感觉复杂，其实看图可能更好理解一点。说白了就是有很多个阶段，越往后面，不同分辨的数量越多。在第一阶段就只有原尺寸的图，第二阶段就有两个不同分辨率图的并行继续，以此类推。</p>
+<img src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122194607898.png" alt="image-20201122194607898" style="zoom:150%;" />
+<p>上图中N32表示的就是第三阶段的第二个流的表示。</p>
+<h3 id="2repeated-multi-resolution-fusions">2.repeated multi-resolution fusions</h3>
+<p>重复融合多分辨率的模块，跨分辨率交换信息。</p>
+<img src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123081836802.png" alt="image-20201123081836802" style="zoom:150%;" />
+<p>这是一个融合三分辨率的例子。可以看出三个输出中的每一个输出都是与三个输入相关的，即$R^o_r= f_{1r}(R^i_1)+f_{2r}(R^i_2)+f_{3r}(R^i_3)$</p>
+<p>同时也会得到一个额外的输出，$R^o_4= f_{14}(R^i_1) + f_{24}(R^i_2) + f_{34}(R^i_3) $</p>
+<p>这些个f就是一系列操作，也就是图中所示的卷积上采样等操作。对高分辨率到低分辨率，低分辨率到高分辨率，同分辨率到同分辨率，操作均不同，具体可见上图。</p>
+<h3 id="3representation-head">3.representation head</h3>
+<p>有三种不同的输出表示：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123083242950.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123083242950.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123083242950.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123083242950.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123083242950.png"
+        title="image-20201123083242950" /></p>
+<p>对于最后的结果的四分辨率流，根据如何去利用这个流分成了三种不同的方式。</p>
+<p>(a):只输出高分辨率 （人体姿态估计）</p>
+<p>(b):拼接四个流的输出 （语义分割）</p>
+<p>(c):在b的基础上形成特征金字塔表示（对象检测）</p>
+<h3 id="4组装起来">4.组装起来</h3>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122174135108.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122174135108.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122174135108.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122174135108.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201122174135108.png"
+        title="image-20201122174135108" /></p>
+<p>再次回过头以完整和组装的视角来看这张图的时候，会更清晰一些。网络的机构体现了最初摘要中所说的并行的意思。有并行卷积流同步的向前推进。上图结构分为4个stage，每个stage的每个分辨率都要先经过四次残差卷积。一个stage中，通过3*3的卷积操作使得从高分辨率到低分辨率。分辨率越小越宽（channel数越多）。呈现2的指倍数增长，最小的分辨率的宽度是最大的八倍。</p>
+<h2 id="语义分割的应用">语义分割的应用</h2>
+<p>这个方法可以用在很多计算机视觉领域，我只看了语义分割的部分。</p>
+<p>​                  <img src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123085726788.png" alt="image-20201123085726788" style="zoom: 67%;" /></p>
+<p>就像上图所示，对四个分辨率的输出进行拼接。这就是就一个维度为15C(C是最大的那个分辨率的channel数，1+2+4+8=15)</p>
+<p>对其进行softmax再上采样四倍得到与原图一样大小的分割图。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090311853.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090311853.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090311853.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090311853.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090311853.png"
+        title="image-20201123090311853" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090343409.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090343409.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090343409.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090343409.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090343409.png"
+        title="image-20201123090343409" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090411488.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090411488.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090411488.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090411488.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090411488.png"
+        title="image-20201123090411488" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090445306.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090445306.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090445306.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090445306.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123090445306.png"
+        title="image-20201123090445306" /></p>
+<p>可见，在各大主流的数据集上都体现了HRNet+ORC的强势</p>
+<h2 id="conclusions">Conclusions</h2>
+<p>作者总结了HRNet和其他的不同。高低分辨率是并联而不是串联，高分辨率是remain的而不是recover的，具有 strong position sensitivity（对位置敏感的任务好）。</p>
+<p>将来的主要工作是希望将HRNet运用到各个计算机视觉的任务中。</p>
+<h2 id="关于代码">关于代码</h2>
+<p>github中给出了HRNet+OCR相应的代码。我是直接看的HRNet-OCR分支下的这个文件。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123102400630.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123102400630.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123102400630.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123102400630.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123102400630.png"
+        title="image-20201123102400630" /></p>
+<p>对于HRNet而言，代码中有四个比较重要的类，BasicBlock、Bottleneck、HighResolutionModule、HighResolutionNet四个类。BasicBlock和Bottleneck是残差块，在resnet中也是能看到的。HighResolutionModule是进行多分辨率融合的模块，HighResolutionNet是HRNetv2。</p>
+<h3 id="1残差块basicblock和bottleneck">1.残差块BasicBlock和Bottleneck</h3>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://pic4.zhimg.com/v2-fd5aa0dadbdbfc6571f74d6b0cae088b_r.jpg"
+        data-srcset="https://pic4.zhimg.com/v2-fd5aa0dadbdbfc6571f74d6b0cae088b_r.jpg, https://pic4.zhimg.com/v2-fd5aa0dadbdbfc6571f74d6b0cae088b_r.jpg 1.5x, https://pic4.zhimg.com/v2-fd5aa0dadbdbfc6571f74d6b0cae088b_r.jpg 2x"
+        data-sizes="auto"
+        alt="https://pic4.zhimg.com/v2-fd5aa0dadbdbfc6571f74d6b0cae088b_r.jpg"
+        title="img" /></p>
+<p>左边是BasicBlock，右边是Bottleneck。在resnet中，左图是resnet-18/34使用的，右图是resnet50/101/152使用的。</p>
+<h3 id="2basicblock左图">2.BasicBlock(左图)</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">BasicBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="n">expansion</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inplanes</span><span class="p">,</span> <span class="n">planes</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">downsample</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BasicBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">conv3x3</span><span class="p">(</span><span class="n">inplanes</span><span class="p">,</span> <span class="n">planes</span><span class="p">,</span> <span class="n">stride</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span> <span class="o">=</span> <span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">planes</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="n">BN_MOMENTUM</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="n">relu_inplace</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span> <span class="o">=</span> <span class="n">conv3x3</span><span class="p">(</span><span class="n">planes</span><span class="p">,</span> <span class="n">planes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn2</span> <span class="o">=</span> <span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">planes</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="n">BN_MOMENTUM</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span> <span class="o">=</span> <span class="n">downsample</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stride</span> <span class="o">=</span> <span class="n">stride</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">residual</span> <span class="o">=</span> <span class="n">x</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn2</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">residual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="n">residual</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>基本结构就是对应着左图来看</p>
+<ul>
+<li>对于输入的参数，inplanes是输入维度, planes是第一个卷积的输出维度, stride和downsample来看resolution要不要下降。</li>
+<li>跳层连接：当模块输入的分辨率与经过卷积处理的分辨率一致时，直接相加；当不一致时（stride！=1）需要使用downsample降低输入的分辨率再相加。</li>
+</ul>
+<h3 id="3bottleneck右图">3.Bottleneck(右图)</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Bottleneck</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="n">expansion</span> <span class="o">=</span> <span class="mi">4</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inplanes</span><span class="p">,</span> <span class="n">planes</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">downsample</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Bottleneck</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">inplanes</span><span class="p">,</span> <span class="n">planes</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span> <span class="o">=</span> <span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">planes</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="n">BN_MOMENTUM</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">planes</span><span class="p">,</span> <span class="n">planes</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span>
+                               <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn2</span> <span class="o">=</span> <span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">planes</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="n">BN_MOMENTUM</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">planes</span><span class="p">,</span> <span class="n">planes</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">expansion</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                               <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn3</span> <span class="o">=</span> <span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">planes</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">expansion</span><span class="p">,</span>
+                               <span class="n">momentum</span><span class="o">=</span><span class="n">BN_MOMENTUM</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="n">relu_inplace</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span> <span class="o">=</span> <span class="n">downsample</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stride</span> <span class="o">=</span> <span class="n">stride</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">residual</span> <span class="o">=</span> <span class="n">x</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn2</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv3</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn3</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">residual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="n">residual</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>与BasicBlock基本相似，深度更深一些。</p>
+<h3 id="4highresolutionmodule">4.HighResolutionModule</h3>
+<p>这个类的功能是对每一个分辨率表示的分支进行特征提取。当只有一个分辨率分支时，就没有融合模块，直接返回结果。当有多个分支流的时候就需要先对各个分支进行计算，最后执行融合过程。</p>
+<p>代码有点长，分解各个def来分析:</p>
+<h4 id="41--_check_branches">4.1  _check_branches</h4>
+<p>用来检查</p>
+<h4 id="42--_make_one_branch">4.2  _make_one_branch</h4>
+<p>对一个分支进行特征提取（对应下图中一个红框的部分）。在单个分支中，特征提取使用到数目为num_blocks的basicblock或者bottleblock（实际在开源代码中stage1是bottleblock，satge2-stage是basicblock）</p>
+<ol>
+<li>先判断是否会downsample，写downsample模块（用在basicblock中）</li>
+<li>搭建4个block，第一个block有可能会降维，后面3个block完全一致。</li>
+</ol>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123155559795.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123155559795.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123155559795.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123155559795.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123155559795.png"
+        title="image-20201123155559795" /></p>
+<h4 id="43-_make_branches">4.3 _make_branches</h4>
+<p>循环调用上面说的_make_one_branch函数，比如并行三列的话，就要调用三次。</p>
+<h4 id="44-_make_fuse_layers">4.4 _make_fuse_layers</h4>
+<p>进行低分辨率和高分辨率的融合。</p>
+<ol>
+<li>如果只有一行，那就不用融合。</li>
+<li>如果有并行结构，就要进行特征融合，以论文中给出的结构为例，这是要一个三分辨率融合至三分辨率的过程。</li>
+</ol>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123160216732.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123160216732.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123160216732.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123160216732.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201123160216732.png"
+        title="image-20201123160216732" /></p>
+<p>函数中嵌入了一个双层循环：一个变量i，一个变量j</p>
+<p>如果i&lt;j：那么，所有j分支都要上采样到和i分支一样分辨率。上采样的倍数即为：2^(j-i)倍</p>
+<p>如果i=j：就是他本身</p>
+<p>如果i&gt;j：那么高分辨率的分支要到卷积下采样和i一样分辨率大小。这里又嵌套了一个循环k，是因为跨层下采样经过的卷积次数不一样，最后一次卷积不能加rule。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">HighResolutionModule</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_branches</span><span class="p">,</span> <span class="n">blocks</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">,</span> <span class="n">num_inchannels</span><span class="p">,</span>
+                 <span class="n">num_channels</span><span class="p">,</span> <span class="n">fuse_method</span><span class="p">,</span> <span class="n">multi_scale_output</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">HighResolutionModule</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_branches</span><span class="p">(</span>
+            <span class="n">num_branches</span><span class="p">,</span> <span class="n">blocks</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">,</span> <span class="n">num_inchannels</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_inchannels</span> <span class="o">=</span> <span class="n">num_inchannels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuse_method</span> <span class="o">=</span> <span class="n">fuse_method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_branches</span> <span class="o">=</span> <span class="n">num_branches</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">multi_scale_output</span> <span class="o">=</span> <span class="n">multi_scale_output</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">branches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_branches</span><span class="p">(</span>
+            <span class="n">num_branches</span><span class="p">,</span> <span class="n">blocks</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuse_layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_fuse_layers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="n">relu_inplace</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_check_branches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_branches</span><span class="p">,</span> <span class="n">blocks</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">,</span>
+                        <span class="n">num_inchannels</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">num_branches</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">num_blocks</span><span class="p">):</span>
+            <span class="n">error_msg</span> <span class="o">=</span> <span class="s1">&#39;NUM_BRANCHES(</span><span class="si">{}</span><span class="s1">) &lt;&gt; NUM_BLOCKS(</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">num_branches</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">num_blocks</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">num_branches</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">num_channels</span><span class="p">):</span>
+            <span class="n">error_msg</span> <span class="o">=</span> <span class="s1">&#39;NUM_BRANCHES(</span><span class="si">{}</span><span class="s1">) &lt;&gt; NUM_CHANNELS(</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">num_branches</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">num_channels</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">num_branches</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">num_inchannels</span><span class="p">):</span>
+            <span class="n">error_msg</span> <span class="o">=</span> <span class="s1">&#39;NUM_BRANCHES(</span><span class="si">{}</span><span class="s1">) &lt;&gt; NUM_INCHANNELS(</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">num_branches</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">num_inchannels</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_make_one_branch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">branch_index</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span>
+                         <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">downsample</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">stride</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> \
+           <span class="bp">self</span><span class="o">.</span><span class="n">num_inchannels</span><span class="p">[</span><span class="n">branch_index</span><span class="p">]</span> <span class="o">!=</span> <span class="n">num_channels</span><span class="p">[</span><span class="n">branch_index</span><span class="p">]</span> <span class="o">*</span> <span class="n">block</span><span class="o">.</span><span class="n">expansion</span><span class="p">:</span>
+            <span class="n">downsample</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_inchannels</span><span class="p">[</span><span class="n">branch_index</span><span class="p">],</span>
+                          <span class="n">num_channels</span><span class="p">[</span><span class="n">branch_index</span><span class="p">]</span> <span class="o">*</span> <span class="n">block</span><span class="o">.</span><span class="n">expansion</span><span class="p">,</span>
+                          <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                <span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">num_channels</span><span class="p">[</span><span class="n">branch_index</span><span class="p">]</span> <span class="o">*</span> <span class="n">block</span><span class="o">.</span><span class="n">expansion</span><span class="p">,</span>
+                            <span class="n">momentum</span><span class="o">=</span><span class="n">BN_MOMENTUM</span><span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_inchannels</span><span class="p">[</span><span class="n">branch_index</span><span class="p">],</span>
+                            <span class="n">num_channels</span><span class="p">[</span><span class="n">branch_index</span><span class="p">],</span> <span class="n">stride</span><span class="p">,</span> <span class="n">downsample</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_inchannels</span><span class="p">[</span><span class="n">branch_index</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">num_channels</span><span class="p">[</span><span class="n">branch_index</span><span class="p">]</span> <span class="o">*</span> <span class="n">block</span><span class="o">.</span><span class="n">expansion</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">[</span><span class="n">branch_index</span><span class="p">]):</span>
+            <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_inchannels</span><span class="p">[</span><span class="n">branch_index</span><span class="p">],</span>
+                                <span class="n">num_channels</span><span class="p">[</span><span class="n">branch_index</span><span class="p">]))</span>
+
+        <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_make_branches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_branches</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">):</span>
+        <span class="n">branches</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_branches</span><span class="p">):</span>
+            <span class="n">branches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_make_one_branch</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">branches</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_make_fuse_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_branches</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">num_branches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_branches</span>
+        <span class="n">num_inchannels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_inchannels</span>
+        <span class="n">fuse_layers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_branches</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_scale_output</span> <span class="k">else</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">fuse_layer</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_branches</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="n">i</span><span class="p">:</span>
+                    <span class="n">fuse_layer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                        <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">num_inchannels</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+                                  <span class="n">num_inchannels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                  <span class="mi">1</span><span class="p">,</span>
+                                  <span class="mi">1</span><span class="p">,</span>
+                                  <span class="mi">0</span><span class="p">,</span>
+                                  <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                        <span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">num_inchannels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">momentum</span><span class="o">=</span><span class="n">BN_MOMENTUM</span><span class="p">)))</span>
+                <span class="k">elif</span> <span class="n">j</span> <span class="o">==</span> <span class="n">i</span><span class="p">:</span>
+                    <span class="n">fuse_layer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">conv3x3s</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="n">j</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="n">i</span> <span class="o">-</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">num_outchannels_conv3x3</span> <span class="o">=</span> <span class="n">num_inchannels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                            <span class="n">conv3x3s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                                <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">num_inchannels</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+                                          <span class="n">num_outchannels_conv3x3</span><span class="p">,</span>
+                                          <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                                <span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">num_outchannels_conv3x3</span><span class="p">,</span>
+                                            <span class="n">momentum</span><span class="o">=</span><span class="n">BN_MOMENTUM</span><span class="p">)))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">num_outchannels_conv3x3</span> <span class="o">=</span> <span class="n">num_inchannels</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                            <span class="n">conv3x3s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                                <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">num_inchannels</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+                                          <span class="n">num_outchannels_conv3x3</span><span class="p">,</span>
+                                          <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                                <span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">num_outchannels_conv3x3</span><span class="p">,</span>
+                                            <span class="n">momentum</span><span class="o">=</span><span class="n">BN_MOMENTUM</span><span class="p">),</span>
+                                <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="n">relu_inplace</span><span class="p">)))</span>
+                    <span class="n">fuse_layer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">conv3x3s</span><span class="p">))</span>
+            <span class="n">fuse_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">fuse_layer</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">fuse_layers</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_num_inchannels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_inchannels</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_branches</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">branches</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_branches</span><span class="p">):</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">branches</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="n">x_fuse</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fuse_layers</span><span class="p">)):</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuse_layers</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">](</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_branches</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="n">i</span><span class="p">:</span>
+                    <span class="n">width_output</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">height_output</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">fuse_layers</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">](</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span>
+                        <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">height_output</span><span class="p">,</span> <span class="n">width_output</span><span class="p">],</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="n">ALIGN_CORNERS</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuse_layers</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">](</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="n">x_fuse</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">x_fuse</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="5highresolutionnet">5.HighResolutionNet</h3>
+<p>这就是最后执行网络的地方。</p>
+<p>这里同时也包括了OCR的内容。</p>
+<p>就HRNet而言，具体过程可如下：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125151147454.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125151147454.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125151147454.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125151147454.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125151147454.png"
+        title="image-20201125151147454" /></p>
+<ol>
+<li>原图先降成1/4大小</li>
+<li>执行1个stage1（4个block）</li>
+<li>通过卷积生成1/2分辨率的流（现在有两条流）</li>
+<li>执行1个stage2（两个流的4个block以及两个流之间交融）</li>
+<li>通过卷积生成1/4分辨率的流（现在有三条流）</li>
+<li>执行4个stage3（三个流的4个block以及三个流之间交融）</li>
+<li>通过卷积生成1/8分辨率的流（现在有四条流）</li>
+<li>执行3个stage4（四个流的4个block以及四个流之间交融）</li>
+<li>上采样下面三条流，使之大小变回原大小，在concat拼接channel用于后续分割任务</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span><span class="lnt">193
+</span><span class="lnt">194
+</span><span class="lnt">195
+</span><span class="lnt">196
+</span><span class="lnt">197
+</span><span class="lnt">198
+</span><span class="lnt">199
+</span><span class="lnt">200
+</span><span class="lnt">201
+</span><span class="lnt">202
+</span><span class="lnt">203
+</span><span class="lnt">204
+</span><span class="lnt">205
+</span><span class="lnt">206
+</span><span class="lnt">207
+</span><span class="lnt">208
+</span><span class="lnt">209
+</span><span class="lnt">210
+</span><span class="lnt">211
+</span><span class="lnt">212
+</span><span class="lnt">213
+</span><span class="lnt">214
+</span><span class="lnt">215
+</span><span class="lnt">216
+</span><span class="lnt">217
+</span><span class="lnt">218
+</span><span class="lnt">219
+</span><span class="lnt">220
+</span><span class="lnt">221
+</span><span class="lnt">222
+</span><span class="lnt">223
+</span><span class="lnt">224
+</span><span class="lnt">225
+</span><span class="lnt">226
+</span><span class="lnt">227
+</span><span class="lnt">228
+</span><span class="lnt">229
+</span><span class="lnt">230
+</span><span class="lnt">231
+</span><span class="lnt">232
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">HighResolutionNet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">ALIGN_CORNERS</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">MODEL</span><span class="o">.</span><span class="n">EXTRA</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">HighResolutionNet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">ALIGN_CORNERS</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">MODEL</span><span class="o">.</span><span class="n">ALIGN_CORNERS</span>
+
+        <span class="c1"># stem net</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                               <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span> <span class="o">=</span> <span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="n">BN_MOMENTUM</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                               <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn2</span> <span class="o">=</span> <span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="n">BN_MOMENTUM</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="n">relu_inplace</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage1_cfg</span> <span class="o">=</span> <span class="n">extra</span><span class="p">[</span><span class="s1">&#39;STAGE1&#39;</span><span class="p">]</span>
+        <span class="n">num_channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage1_cfg</span><span class="p">[</span><span class="s1">&#39;NUM_CHANNELS&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">blocks_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage1_cfg</span><span class="p">[</span><span class="s1">&#39;BLOCK&#39;</span><span class="p">]]</span>
+        <span class="n">num_blocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage1_cfg</span><span class="p">[</span><span class="s1">&#39;NUM_BLOCKS&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_layer</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">)</span>
+        <span class="n">stage1_out_channel</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">expansion</span><span class="o">*</span><span class="n">num_channels</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage2_cfg</span> <span class="o">=</span> <span class="n">extra</span><span class="p">[</span><span class="s1">&#39;STAGE2&#39;</span><span class="p">]</span>
+        <span class="n">num_channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage2_cfg</span><span class="p">[</span><span class="s1">&#39;NUM_CHANNELS&#39;</span><span class="p">]</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">blocks_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage2_cfg</span><span class="p">[</span><span class="s1">&#39;BLOCK&#39;</span><span class="p">]]</span>
+        <span class="n">num_channels</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">num_channels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">block</span><span class="o">.</span><span class="n">expansion</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">num_channels</span><span class="p">))]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transition1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_transition_layer</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">stage1_out_channel</span><span class="p">],</span> <span class="n">num_channels</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage2</span><span class="p">,</span> <span class="n">pre_stage_channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_stage</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stage2_cfg</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage3_cfg</span> <span class="o">=</span> <span class="n">extra</span><span class="p">[</span><span class="s1">&#39;STAGE3&#39;</span><span class="p">]</span>
+        <span class="n">num_channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage3_cfg</span><span class="p">[</span><span class="s1">&#39;NUM_CHANNELS&#39;</span><span class="p">]</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">blocks_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage3_cfg</span><span class="p">[</span><span class="s1">&#39;BLOCK&#39;</span><span class="p">]]</span>
+        <span class="n">num_channels</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">num_channels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">block</span><span class="o">.</span><span class="n">expansion</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">num_channels</span><span class="p">))]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transition2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_transition_layer</span><span class="p">(</span>
+            <span class="n">pre_stage_channels</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage3</span><span class="p">,</span> <span class="n">pre_stage_channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_stage</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stage3_cfg</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage4_cfg</span> <span class="o">=</span> <span class="n">extra</span><span class="p">[</span><span class="s1">&#39;STAGE4&#39;</span><span class="p">]</span>
+        <span class="n">num_channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage4_cfg</span><span class="p">[</span><span class="s1">&#39;NUM_CHANNELS&#39;</span><span class="p">]</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">blocks_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage4_cfg</span><span class="p">[</span><span class="s1">&#39;BLOCK&#39;</span><span class="p">]]</span>
+        <span class="n">num_channels</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">num_channels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">block</span><span class="o">.</span><span class="n">expansion</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">num_channels</span><span class="p">))]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transition3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_transition_layer</span><span class="p">(</span>
+            <span class="n">pre_stage_channels</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stage4</span><span class="p">,</span> <span class="n">pre_stage_channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_stage</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stage4_cfg</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span> <span class="n">multi_scale_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">last_inp_channels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pre_stage_channels</span><span class="p">))</span>
+        <span class="n">ocr_mid_channels</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">MODEL</span><span class="o">.</span><span class="n">OCR</span><span class="o">.</span><span class="n">MID_CHANNELS</span>
+        <span class="n">ocr_key_channels</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">MODEL</span><span class="o">.</span><span class="n">OCR</span><span class="o">.</span><span class="n">KEY_CHANNELS</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv3x3_ocr</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">last_inp_channels</span><span class="p">,</span> <span class="n">ocr_mid_channels</span><span class="p">,</span>
+                      <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">ocr_mid_channels</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="n">relu_inplace</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ocr_gather_head</span> <span class="o">=</span> <span class="n">SpatialGather_Module</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">DATASET</span><span class="o">.</span><span class="n">NUM_CLASSES</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ocr_distri_head</span> <span class="o">=</span> <span class="n">SpatialOCR_Module</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="n">ocr_mid_channels</span><span class="p">,</span>
+                                                 <span class="n">key_channels</span><span class="o">=</span><span class="n">ocr_key_channels</span><span class="p">,</span>
+                                                 <span class="n">out_channels</span><span class="o">=</span><span class="n">ocr_mid_channels</span><span class="p">,</span>
+                                                 <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                                 <span class="n">dropout</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                                                 <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cls_head</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span>
+            <span class="n">ocr_mid_channels</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">DATASET</span><span class="o">.</span><span class="n">NUM_CLASSES</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">aux_head</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">last_inp_channels</span><span class="p">,</span> <span class="n">last_inp_channels</span><span class="p">,</span>
+                      <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+            <span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">last_inp_channels</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="n">relu_inplace</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">last_inp_channels</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">DATASET</span><span class="o">.</span><span class="n">NUM_CLASSES</span><span class="p">,</span>
+                      <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">_make_transition_layer</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">num_channels_pre_layer</span><span class="p">,</span> <span class="n">num_channels_cur_layer</span><span class="p">):</span>
+        <span class="n">num_branches_cur</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">num_channels_cur_layer</span><span class="p">)</span>
+        <span class="n">num_branches_pre</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">num_channels_pre_layer</span><span class="p">)</span>
+
+        <span class="n">transition_layers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_branches_cur</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_branches_pre</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">num_channels_cur_layer</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">num_channels_pre_layer</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="n">transition_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                        <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">num_channels_pre_layer</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                  <span class="n">num_channels_cur_layer</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                  <span class="mi">3</span><span class="p">,</span>
+                                  <span class="mi">1</span><span class="p">,</span>
+                                  <span class="mi">1</span><span class="p">,</span>
+                                  <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                        <span class="n">BatchNorm2d</span><span class="p">(</span>
+                            <span class="n">num_channels_cur_layer</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">momentum</span><span class="o">=</span><span class="n">BN_MOMENTUM</span><span class="p">),</span>
+                        <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="n">relu_inplace</span><span class="p">)))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">transition_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">conv3x3s</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">-</span><span class="n">num_branches_pre</span><span class="p">):</span>
+                    <span class="n">inchannels</span> <span class="o">=</span> <span class="n">num_channels_pre_layer</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">outchannels</span> <span class="o">=</span> <span class="n">num_channels_cur_layer</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> \
+                        <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">i</span><span class="o">-</span><span class="n">num_branches_pre</span> <span class="k">else</span> <span class="n">inchannels</span>
+                    <span class="n">conv3x3s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                        <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span>
+                            <span class="n">inchannels</span><span class="p">,</span> <span class="n">outchannels</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                        <span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">outchannels</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="n">BN_MOMENTUM</span><span class="p">),</span>
+                        <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="n">relu_inplace</span><span class="p">)))</span>
+                <span class="n">transition_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">conv3x3s</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">transition_layers</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_make_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">inplanes</span><span class="p">,</span> <span class="n">planes</span><span class="p">,</span> <span class="n">blocks</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">downsample</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">stride</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">inplanes</span> <span class="o">!=</span> <span class="n">planes</span> <span class="o">*</span> <span class="n">block</span><span class="o">.</span><span class="n">expansion</span><span class="p">:</span>
+            <span class="n">downsample</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">inplanes</span><span class="p">,</span> <span class="n">planes</span> <span class="o">*</span> <span class="n">block</span><span class="o">.</span><span class="n">expansion</span><span class="p">,</span>
+                          <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                <span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">planes</span> <span class="o">*</span> <span class="n">block</span><span class="o">.</span><span class="n">expansion</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="n">BN_MOMENTUM</span><span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block</span><span class="p">(</span><span class="n">inplanes</span><span class="p">,</span> <span class="n">planes</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">downsample</span><span class="p">))</span>
+        <span class="n">inplanes</span> <span class="o">=</span> <span class="n">planes</span> <span class="o">*</span> <span class="n">block</span><span class="o">.</span><span class="n">expansion</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">blocks</span><span class="p">):</span>
+            <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block</span><span class="p">(</span><span class="n">inplanes</span><span class="p">,</span> <span class="n">planes</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_make_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">num_inchannels</span><span class="p">,</span>
+                    <span class="n">multi_scale_output</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">num_modules</span> <span class="o">=</span> <span class="n">layer_config</span><span class="p">[</span><span class="s1">&#39;NUM_MODULES&#39;</span><span class="p">]</span>
+        <span class="n">num_branches</span> <span class="o">=</span> <span class="n">layer_config</span><span class="p">[</span><span class="s1">&#39;NUM_BRANCHES&#39;</span><span class="p">]</span>
+        <span class="n">num_blocks</span> <span class="o">=</span> <span class="n">layer_config</span><span class="p">[</span><span class="s1">&#39;NUM_BLOCKS&#39;</span><span class="p">]</span>
+        <span class="n">num_channels</span> <span class="o">=</span> <span class="n">layer_config</span><span class="p">[</span><span class="s1">&#39;NUM_CHANNELS&#39;</span><span class="p">]</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">blocks_dict</span><span class="p">[</span><span class="n">layer_config</span><span class="p">[</span><span class="s1">&#39;BLOCK&#39;</span><span class="p">]]</span>
+        <span class="n">fuse_method</span> <span class="o">=</span> <span class="n">layer_config</span><span class="p">[</span><span class="s1">&#39;FUSE_METHOD&#39;</span><span class="p">]</span>
+
+        <span class="n">modules</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_modules</span><span class="p">):</span>
+            <span class="c1"># multi_scale_output is only used last module</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">multi_scale_output</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">==</span> <span class="n">num_modules</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">reset_multi_scale_output</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">reset_multi_scale_output</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">modules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">HighResolutionModule</span><span class="p">(</span><span class="n">num_branches</span><span class="p">,</span>
+                                     <span class="n">block</span><span class="p">,</span>
+                                     <span class="n">num_blocks</span><span class="p">,</span>
+                                     <span class="n">num_inchannels</span><span class="p">,</span>
+                                     <span class="n">num_channels</span><span class="p">,</span>
+                                     <span class="n">fuse_method</span><span class="p">,</span>
+                                     <span class="n">reset_multi_scale_output</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">num_inchannels</span> <span class="o">=</span> <span class="n">modules</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_num_inchannels</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">modules</span><span class="p">),</span> <span class="n">num_inchannels</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">x_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stage2_cfg</span><span class="p">[</span><span class="s1">&#39;NUM_BRANCHES&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transition1</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">x</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">y_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage2</span><span class="p">(</span><span class="n">x_list</span><span class="p">)</span>
+
+        <span class="n">x_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stage3_cfg</span><span class="p">[</span><span class="s1">&#39;NUM_BRANCHES&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage2_cfg</span><span class="p">[</span><span class="s1">&#39;NUM_BRANCHES&#39;</span><span class="p">]:</span>
+                    <span class="n">x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transition2</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">y_list</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transition2</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">y_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">y_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage3</span><span class="p">(</span><span class="n">x_list</span><span class="p">)</span>
+
+        <span class="n">x_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stage4_cfg</span><span class="p">[</span><span class="s1">&#39;NUM_BRANCHES&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage3_cfg</span><span class="p">[</span><span class="s1">&#39;NUM_BRANCHES&#39;</span><span class="p">]:</span>
+                    <span class="n">x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transition3</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">y_list</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transition3</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">y_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage4</span><span class="p">(</span><span class="n">x_list</span><span class="p">)</span>
+
+        <span class="c1"># Upsampling</span>
+        <span class="n">x0_h</span><span class="p">,</span> <span class="n">x0_w</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">x0_h</span><span class="p">,</span> <span class="n">x0_w</span><span class="p">),</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="n">ALIGN_CORNERS</span><span class="p">)</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">x0_h</span><span class="p">,</span> <span class="n">x0_w</span><span class="p">),</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="n">ALIGN_CORNERS</span><span class="p">)</span>
+        <span class="n">x3</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">x0_h</span><span class="p">,</span> <span class="n">x0_w</span><span class="p">),</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="n">ALIGN_CORNERS</span><span class="p">)</span>
+
+        <span class="n">feats</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">out_aux_seg</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># ocr</span>
+        <span class="n">out_aux</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aux_head</span><span class="p">(</span><span class="n">feats</span><span class="p">)</span>
+        <span class="c1"># compute contrast feature</span>
+        <span class="n">feats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv3x3_ocr</span><span class="p">(</span><span class="n">feats</span><span class="p">)</span>
+
+        <span class="n">context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ocr_gather_head</span><span class="p">(</span><span class="n">feats</span><span class="p">,</span> <span class="n">out_aux</span><span class="p">)</span>
+        <span class="n">feats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ocr_distri_head</span><span class="p">(</span><span class="n">feats</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cls_head</span><span class="p">(</span><span class="n">feats</span><span class="p">)</span>
+
+        <span class="n">out_aux_seg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out_aux</span><span class="p">)</span>
+        <span class="n">out_aux_seg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out_aux_seg</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="手绘流程图">手绘流程图：</h2>
+<p>1.原图先进去，先降成1/4大小。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125151840361.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125151840361.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125151840361.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125151840361.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125151840361.png"
+        title="image-20201125151840361" /></p>
+<p>2.执行1个stage1（4个block）</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152019655.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152019655.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152019655.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152019655.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152019655.png"
+        title="image-20201125152019655" /></p>
+<p>3.分支到两个流</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152142150.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152142150.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152142150.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152142150.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152142150.png"
+        title="image-20201125152142150" /></p>
+<p>4.执行1个stage2（两个流的4个block以及两个流之间交融）</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152318475.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152318475.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152318475.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152318475.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152318475.png"
+        title="image-20201125152318475" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152337542.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152337542.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152337542.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152337542.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152337542.png"
+        title="image-20201125152337542" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152425031.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152425031.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152425031.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152425031.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125152425031.png"
+        title="image-20201125152425031" /></p>
+<p>后面其实都很类似，就不放上来了。</p></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-11-19</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://jqc8438.github.io/2020/11/hrnet/" data-title="【论文笔记】HRNet" data-hashtags="语义分割,人体姿态估计,高分辨率"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://jqc8438.github.io/2020/11/hrnet/" data-hashtag="语义分割"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://jqc8438.github.io/2020/11/hrnet/" data-title="【论文笔记】HRNet" data-image="/images/HRNet.png"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://jqc8438.github.io/2020/11/hrnet/" data-title="【论文笔记】HRNet" data-description="Deep high-resolution representation learning for visual recognition "><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="http://jqc8438.github.io/2020/11/hrnet/" data-title="【论文笔记】HRNet"><i data-svg-src="/lib/simple-icons/icons/baidu.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://jqc8438.github.io/2020/11/hrnet/" data-title="【论文笔记】HRNet"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/">语义分割</a>,&nbsp;<a href="/tags/%E4%BA%BA%E4%BD%93%E5%A7%BF%E6%80%81%E4%BC%B0%E8%AE%A1/">人体姿态估计</a>,&nbsp;<a href="/tags/%E9%AB%98%E5%88%86%E8%BE%A8%E7%8E%87/">高分辨率</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/2020/09/fcn/" class="prev" rel="prev" title="【论文笔记】FCN"><i class="fas fa-angle-left fa-fw"></i>【论文笔记】FCN</a>
+            <a href="/2020/11/ocr/" class="next" rel="next" title="【论文笔记】OCR">【论文笔记】OCR<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.89.4">Hugo</a> 驱动 | 主题 - <a href="https://github.com/sunt-programator/CodeIT" target="_blank" rel="noopener noreferrer" title="CodeIT 0.2.10"><i class="fas fa-laptop-code fa-fw"></i> CodeIT</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">jinhaha</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

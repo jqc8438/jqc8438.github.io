@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>【论文笔记】SENet - 金哈哈的博客</title><meta name="description" content="Squeeze-and-Excitation Network"><meta property="og:title" content="【论文笔记】SENet" />
+<meta property="og:description" content="Squeeze-and-Excitation Network" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jqc8438.github.io/2020/12/senet/" /><meta property="og:image" content="http://jqc8438.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-12-08T14:09:10+08:00" />
+<meta property="article:modified_time" content="2020-12-08T14:09:10+08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://jqc8438.github.io/logo.png"/>
+
+<meta name="twitter:title" content="【论文笔记】SENet"/>
+<meta name="twitter:description" content="Squeeze-and-Excitation Network"/>
+<meta name="application-name" content="jinhaha">
+<meta name="apple-mobile-web-app-title" content="jinhaha"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://jqc8438.github.io/2020/12/senet/" /><link rel="prev" href="http://jqc8438.github.io/2020/12/attunet/" /><link rel="next" href="http://jqc8438.github.io/2021/01/repvgg/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "【论文笔记】SENet",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/jqc8438.github.io\/2020\/12\/senet\/"
+        },"genre": "posts","keywords": "注意力机制, 通道注意力","wordcount":  1644 ,
+        "url": "http:\/\/jqc8438.github.io\/2020\/12\/senet\/","datePublished": "2020-12-08T14:09:10+08:00","dateModified": "2020-12-08T14:09:10+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "jinhaha"
+            },"description": "Squeeze-and-Excitation Network"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">('true' === 'true' && window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">【论文笔记】SENet</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>jinhaha</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"><i class="far fa-folder fa-fw"></i>论文笔记</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-12-08">2020-12-08</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1644 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="featured-image"><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/SENet.png"
+        data-srcset="/images/SENet.png, /images/SENet.png 1.5x, /images/SENet.png 2x"
+        data-sizes="auto"
+        alt="/images/SENet.png"
+        title="Squeeze-and-Excitation Network" /></div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#写在前面">写在前面</a>
+      <ul>
+        <li><a href="#注意力机制">注意力机制</a></li>
+      </ul>
+    </li>
+    <li><a href="#abstract">Abstract</a></li>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#squeeze-and-excitation-se-block">Squeeze-and-Excitation (SE) Block</a>
+      <ul>
+        <li><a href="#先上代码">先上代码</a></li>
+        <li><a href="#squeeze-global-information-embedding">Squeeze: Global Information Embedding</a></li>
+        <li><a href="#excitation-adaptive-recalibration">Excitation: Adaptive Recalibration</a></li>
+        <li><a href="#se-block">SE block</a></li>
+      </ul>
+    </li>
+    <li><a href="#se-inception--se-resnet">SE-Inception &amp; SE-ResNet</a></li>
+    <li><a href="#ablation-study">Ablation Study</a>
+      <ul>
+        <li><a href="#1reduction-ratio的选择">1.Reduction ratio的选择</a></li>
+        <li><a href="#2squeeze-operator">2.Squeeze Operator</a></li>
+        <li><a href="#3excitation-operator">3.Excitation Operator</a></li>
+        <li><a href="#4different-stages">4.Different stages</a></li>
+        <li><a href="#5integration-strategy">5.Integration strategy</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="senet">SENet</h1>
+<p><strong>原文</strong>：Squeeze-and-Excitation Network [Cited by 4940]</p>
+<p><strong>论文链接</strong>: <a href="https://arxiv.org/abs/1804.03999" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/1804.03999</a></p>
+<p><strong>Caffe official code</strong>:  <a href="https://github.com/hujie-frank/SENet" target="_blank" rel="noopener noreferrer">https://github.com/hujie-frank/SENet</a></p>
+<p><strong>pytorh high-star 复现</strong>：<a href="https://github.com/moskomule/senet.pytorch" target="_blank" rel="noopener noreferrer">https://github.com/moskomule/senet.pytorch</a></p>
+<p><strong>笔记时间</strong>：2020.12.08</p>
+<p>文章收录于在CVPR2018和TPAMI</p>
+<h2 id="写在前面">写在前面</h2>
+<p>读了attention unet之后想读一下attention的经典文章，senet是做channel attention的最早的文章。引用率也很高。文章主要的工作是引入了se block，进行了通道间的注意力。文章中做了大量的消融实验，来证明网络的有效性。</p>
+<h3 id="注意力机制">注意力机制</h3>
+<p>对注意力机制的设置大概可以理解为：使用一些网络去<strong>计算一个权重</strong>，把这个权重与<strong>feature map</strong>进行运算，对这个<strong>feature map</strong>进行改变，得到加强注意力后的<strong>feature map</strong>。</p>
+<h2 id="abstract">Abstract</h2>
+<p>卷积操作可以融合空间和通道的特征，大多数的研究主要针对对空间特征的提取。本文提出的SENet主要是研究通道间关系的。其可
+自适应的校正通道特征。</p>
+<h2 id="introduction">Introduction</h2>
+<p>主要还是阐述了，卷积提取特征是非常重要的研究点。注意力机制可对特征进行校正，校正后的特征可保留有价值的特征，剔除没价值的特征。本文又重点关注了通道的注意力提取。</p>
+<h2 id="squeeze-and-excitation-se-block">Squeeze-and-Excitation (SE) Block</h2>
+<p>文章最重点的部分也就是SE block的提出。</p>
+<p>之所以是叫se，是因为作者把操作分为了两步，一步叫Squeeze，一步叫Excitation</p>
+<h3 id="先上代码">先上代码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">SELayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="mi">16</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SELayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">avg_pool</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">AdaptiveAvgPool2d</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">channel</span> <span class="o">//</span> <span class="n">reduction</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">channel</span> <span class="o">//</span> <span class="n">reduction</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+        <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avg_pool</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="c1">#对应Squeeze操作</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">#对应Excitation操作</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="o">.</span><span class="n">expand_as</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="squeeze-global-information-embedding">Squeeze: Global Information Embedding</h3>
+<p>直接用中文翻译的话，squeeze是挤压的意思。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208092012492.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208092012492.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208092012492.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208092012492.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208092012492.png"
+        title="image-20201208092012492" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208092100131.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208092100131.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208092100131.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208092100131.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208092100131.png"
+        title="image-20201208092100131" /></p>
+<p>上图中的画线部分就是squeeze的操作，具体来说他就是是对应一个全局平均池化的操作。将一个c通道，hxw的特征图，<strong>压成</strong>c通道1x1。于是这个得到的结果是能表示全局信息的。</p>
+<blockquote>
+<ul>
+<li>The transformation output <em>U</em> can be interpreted as <strong>a collection of the local descriptors whose statistics are expressive for the whole image</strong>.</li>
+<li>It is proposed to <strong>squeeze global spatial information into a channel descriptor</strong>.</li>
+<li>This is achieved by using <strong>global average pooling</strong> to generate channel-wise statistics.</li>
+</ul>
+</blockquote>
+<p>也就是说这个操作是为了让将全局空间信息压缩到通道描述符中。</p>
+<p>在代码中，就是对应的自适应平均池化到1x1</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="bp">self</span><span class="o">.</span><span class="n">avg_pool</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">AdaptiveAvgPool2d</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avg_pool</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="c1">#对应Squeeze操作</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="excitation-adaptive-recalibration">Excitation: Adaptive Recalibration</h3>
+<p>直接用中文翻译的话，excitation是激发的意思，直接理解好像不是很好理解的感觉。Adaptive Recalibration意思是自适应重新校准，好像也不是很好理解。直接看他是怎么操作的吧。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208093332260.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208093332260.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208093332260.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208093332260.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208093332260.png"
+        title="image-20201208093332260" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208093403413.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208093403413.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208093403413.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208093403413.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208093403413.png"
+        title="image-20201208093403413" /></p>
+<p>上图中的画线部分就是excitation的操作，具体来说包含两个全连接层。对squeeze全局池化后得到的结果（已经是可以看作一个C维向量），进行全连接，得到C/r维的向量，在进行Reulu激活，再对进行一次全连接，将C/r维的向量变回C维向量，再进行sigmoid激活（使得数值位于0-1之间），这便是得到了权重矩阵。</p>
+<p>看代码可以更好的理解这个过程:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="bp">self</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    		<span class="c1">#第一次全连接，降低维度</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">channel</span> <span class="o">//</span> <span class="n">reduction</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    		<span class="c1">#第二次全连接，恢复维度</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">channel</span> <span class="o">//</span> <span class="n">reduction</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    		<span class="c1">#sigmoid激活，使得值位于0-1之间</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">#对应Excitation操作</span>
+    
+
+<span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="o">.</span><span class="n">expand_as</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="c1">#把权重矩阵赋予到特征图</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>最后的操作就是把这个权重矩阵和U进行相乘计算，把权重赋予上去。</p>
+<h3 id="se-block">SE block</h3>
+<p>分开看完之后，再整合起来看就是如下图这样的操作过程。</p>
+<img src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208093923253.png" alt="image-20201208093923253" style="zoom: 67%;" />
+<p>先全局池化，再全连接将低维度，再rulu激活，再全连接恢复维度，再sigmoid激活。</p>
+<h2 id="se-inception--se-resnet">SE-Inception &amp; SE-ResNet</h2>
+<p>se块是即插即用的，可以集成到inception和resnet当中</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208094620153.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208094620153.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208094620153.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208094620153.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208094620153.png"
+        title="image-20201208094620153" /></p>
+<h2 id="ablation-study">Ablation Study</h2>
+<h3 id="1reduction-ratio的选择">1.Reduction ratio的选择</h3>
+<p>也就是excitation中第一个全连接降维到底降多少的问题，这是一个超参数。实验证明，在同时考虑精度和参数量的情况下选择r=16比较合适。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095053053.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095053053.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095053053.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095053053.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095053053.png"
+        title="image-20201208095053053" /></p>
+<h3 id="2squeeze-operator">2.Squeeze Operator</h3>
+<p>squeeze操作中用平均池化和最大池化哪个好？<strong>平均池化好</strong></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095315520.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095315520.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095315520.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095315520.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095315520.png"
+        title="image-20201208095315520" /></p>
+<h3 id="3excitation-operator">3.Excitation Operator</h3>
+<p>excitation操作中第二个全连接后的激活层怎么选？ <strong>sigmoid</strong></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095412184.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095412184.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095412184.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095412184.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095412184.png"
+        title="image-20201208095412184" /></p>
+<h3 id="4different-stages">4.Different stages</h3>
+<p>se块放在resnet的哪个stage好？还是全放好？ <strong>全放好</strong></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095737971.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095737971.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095737971.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095737971.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095737971.png"
+        title="image-20201208095737971" /></p>
+<h3 id="5integration-strategy">5.Integration strategy</h3>
+<p>再resnet中，se块怎么放比较好？有四种放的方式，第一种最好。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095837292.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095837292.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095837292.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095837292.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095837292.png"
+        title="image-20201208095837292" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095903167.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095903167.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095903167.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095903167.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201208095903167.png"
+        title="image-20201208095903167" /></p></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-12-08</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://jqc8438.github.io/2020/12/senet/" data-title="【论文笔记】SENet" data-hashtags="注意力机制,通道注意力"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://jqc8438.github.io/2020/12/senet/" data-hashtag="注意力机制"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://jqc8438.github.io/2020/12/senet/" data-title="【论文笔记】SENet" data-image="/images/SENet.png"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://jqc8438.github.io/2020/12/senet/" data-title="【论文笔记】SENet" data-description="Squeeze-and-Excitation Network"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="http://jqc8438.github.io/2020/12/senet/" data-title="【论文笔记】SENet"><i data-svg-src="/lib/simple-icons/icons/baidu.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://jqc8438.github.io/2020/12/senet/" data-title="【论文笔记】SENet"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/">注意力机制</a>,&nbsp;<a href="/tags/%E9%80%9A%E9%81%93%E6%B3%A8%E6%84%8F%E5%8A%9B/">通道注意力</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/2020/12/attunet/" class="prev" rel="prev" title="【论文笔记】Attention U-Net"><i class="fas fa-angle-left fa-fw"></i>【论文笔记】Attention U-Net</a>
+            <a href="/2021/01/repvgg/" class="next" rel="next" title="【论文笔记】RepVGG">【论文笔记】RepVGG<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.89.4">Hugo</a> 驱动 | 主题 - <a href="https://github.com/sunt-programator/CodeIT" target="_blank" rel="noopener noreferrer" title="CodeIT 0.2.10"><i class="fas fa-laptop-code fa-fw"></i> CodeIT</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">jinhaha</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

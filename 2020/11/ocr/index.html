@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>【论文笔记】OCR - 金哈哈的博客</title><meta name="description" content="Object-Contextual Representations for Semantic Segmentation"><meta property="og:title" content="【论文笔记】OCR" />
+<meta property="og:description" content="Object-Contextual Representations for Semantic Segmentation" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jqc8438.github.io/2020/11/ocr/" /><meta property="og:image" content="http://jqc8438.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-11-25T09:54:00+08:00" />
+<meta property="article:modified_time" content="2020-11-25T09:54:00+08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://jqc8438.github.io/logo.png"/>
+
+<meta name="twitter:title" content="【论文笔记】OCR"/>
+<meta name="twitter:description" content="Object-Contextual Representations for Semantic Segmentation"/>
+<meta name="application-name" content="jinhaha">
+<meta name="apple-mobile-web-app-title" content="jinhaha"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://jqc8438.github.io/2020/11/ocr/" /><link rel="prev" href="http://jqc8438.github.io/2020/11/hrnet/" /><link rel="next" href="http://jqc8438.github.io/2020/12/attunet/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "【论文笔记】OCR",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/jqc8438.github.io\/2020\/11\/ocr\/"
+        },"genre": "posts","keywords": "语义分割, 注意力机制","wordcount":  1254 ,
+        "url": "http:\/\/jqc8438.github.io\/2020\/11\/ocr\/","datePublished": "2020-11-25T09:54:00+08:00","dateModified": "2020-11-25T09:54:00+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "jinhaha"
+            },"description": "Object-Contextual Representations for Semantic Segmentation"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">('true' === 'true' && window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">【论文笔记】OCR</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>jinhaha</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"><i class="far fa-folder fa-fw"></i>论文笔记</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-11-25">2020-11-25</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1254 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="featured-image"><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/ocr_seg.png"
+        data-srcset="/images/ocr_seg.png, /images/ocr_seg.png 1.5x, /images/ocr_seg.png 2x"
+        data-sizes="auto"
+        alt="/images/ocr_seg.png"
+        title="Object-Contextual Representations for Semantic Segmentation" /></div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#写在前面">写在前面</a></li>
+    <li><a href="#abstract">Abstract</a></li>
+    <li><a href="#introductionrelated-work">Introduction+Related work</a></li>
+    <li><a href="#approach">Approach</a></li>
+    <li><a href="#experiments">Experiments</a></li>
+    <li><a href="#conclusions">Conclusions</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p><strong>原文</strong>：Object-Contextual Representations for Semantic Segmentation</p>
+<p><strong>论文链接</strong>: <a href="https://arxiv.org/abs/1909.11065" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/1909.11065</a></p>
+<p><strong>pytorch official code</strong>: <a href="https://github.com/HRNet/HRNet-Semantic-Segmentation/tree/HRNet-OCR" target="_blank" rel="noopener noreferrer">https://github.com/HRNet/HRNet-Semantic-Segmentation/tree/HRNet-OCR</a></p>
+<p><strong>笔记时间</strong>：2020.11.25</p>
+<h2 id="写在前面">写在前面</h2>
+<p>文章发表在了ECCV2020</p>
+<p><em>微软和中科大提出的HRNet可以保持高分辨率的特性可以用于对位置信息敏感的任务中。</em></p>
+<p><em>在语义分割的任务中进一步的提出了一个聚合上下文信息的模块。也就是今天说的这个OCR。</em></p>
+<p>看到目前的分割文章都有一种A+B的感觉，A是一个backbone（resnet,inception）等等。B是一个语义聚合的模块（包括pspnet中的PPM，deeplab中的ASPP）等等</p>
+<h2 id="abstract">Abstract</h2>
+<p>文章的总体思路是：<strong>像素的标签是像素所在的对象的标签，并且通过用相应的对象区域表示来表征每个像素来加强像素表示。</strong></p>
+<p>主要分为三个步骤：</p>
+<ul>
+<li>First, we learn object regions under the supervision of the ground-truth segmentation.（这里的object regions可以大概理解成我先搞一个粗略的分割）</li>
+<li>Second, we compute the object region representation by aggregating the representations of the pixels lying in the object region.</li>
+<li>Last, we compute the relation between each pixel and each object region, and augment the representation of each pixel with the object-contextual representation which is a weighted aggregation of all the object region representations.</li>
+</ul>
+<p>具体看这些步骤好像很乱，事实上大概目标就是计算像素和对象之间的关系，最后来加强每个像素的表示。</p>
+<h2 id="introductionrelated-work">Introduction+Related work</h2>
+<p>对于上下文信息的利用最早就有aspp和ppm这种具有固定区域结构的空间表示。但是本文提出的OCR对比固定空间表示的上下文聚合更具灵活性。可以看到下图：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125155513735.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125155513735.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125155513735.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125155513735.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125155513735.png"
+        title="image-20201125155513735" /></p>
+<p>对于aspp来讲，每个像素去提取上下文信息都是固定空间位置的。对于OCR来讲，他提取的上下文信息是提取目标像素所在对象的上下文信息。</p>
+<p>论文整体的思路有点有粗到细的感觉。先根据粗的分割结果表示出对象。再通过对象和像素之间的关系，加强表示像素的信息。但是这个粗分割的结果只用于生成上下文信息。</p>
+<h2 id="approach">Approach</h2>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125160231563.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125160231563.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125160231563.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125160231563.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125160231563.png"
+        title="image-20201125160231563" /></p>
+<p>文章这个部分写了很多的公式。直接看公式可能有点云里雾里，直接看代码可能更清楚些。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125160518228.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125160518228.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125160518228.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125160518228.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125160518228.png"
+        title="image-20201125160518228" /></p>
+<p>看的是上面这个文件的代码</p>
+<p><a href="https://github.com/HRNet/HRNet-Semantic-Segmentation/blob/HRNet-OCR/lib/models/seg_hrnet_ocr.py" target="_blank" rel="noopener noreferrer">https://github.com/HRNet/HRNet-Semantic-Segmentation/blob/HRNet-OCR/lib/models/seg_hrnet_ocr.py</a></p>
+<p>633行之前都是进行HRNet，从633行开始才是OCR的部分</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python">     <span class="c1"># ocr</span>
+    
+    <span class="c1">#这句的作用是进行粗分割，形成对应论文中的软对象区域，也就是粉色框里的东西</span>
+       	<span class="n">out_aux</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aux_head</span><span class="p">(</span><span class="n">feats</span><span class="p">)</span>
+        
+        <span class="c1"># compute contrast feature</span>
+     <span class="c1">#这里feats就是图中的蓝色框里的东西，对应论文中的pixel reprations</span>
+        <span class="n">feats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv3x3_ocr</span><span class="p">(</span><span class="n">feats</span><span class="p">)</span>
+	 
+    <span class="c1">#这里形成的是object region representation，就是紫色框里的东西</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ocr_gather_head</span><span class="p">(</span><span class="n">feats</span><span class="p">,</span> <span class="n">out_aux</span><span class="p">)</span>
+        
+     <span class="c1">#计算pixel和object region的关系。最后形成的是augmented 		  #representation也就是黄色框里的深蓝色块（这步里面进去看有很多的步骤）</span>
+        <span class="n">feats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ocr_distri_head</span><span class="p">(</span><span class="n">feats</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+        <span class="c1">#最后分类到对应的channel数</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cls_head</span><span class="p">(</span><span class="n">feats</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在看代码的过程中没有看到最后上采样4倍的地方，找了好久，最后发现好像写在了criterion.py 交叉熵损失那里，不知道为啥要这么做。</p>
+<p>对比实验验证对象区域监督对性能有不小的影响</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125163115962.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125163115962.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125163115962.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125163115962.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125163115962.png"
+        title="image-20201125163115962" /></p>
+<h2 id="experiments">Experiments</h2>
+<p>训练:用于监督目标区域的损失设置损失权重为0.4。进行了数据增强。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125164036533.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125164036533.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125164036533.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125164036533.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20201125164036533.png"
+        title="image-20201125164036533" /></p>
+<p>作者不仅在性能上进行了对比，在内存使用，参数量等也进行了对比。</p>
+<h2 id="conclusions">Conclusions</h2>
+<p>文章提出了一种面向语义分割的对象上下文表示方法。主要的想法就是认为像素的标签是像素所在的对象的标签，并且通过用相应的对象区域表示来表征每个像素来加强像素表示。</p></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-11-25</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://jqc8438.github.io/2020/11/ocr/" data-title="【论文笔记】OCR" data-hashtags="语义分割,注意力机制"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://jqc8438.github.io/2020/11/ocr/" data-hashtag="语义分割"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://jqc8438.github.io/2020/11/ocr/" data-title="【论文笔记】OCR" data-image="/images/ocr_seg.png"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://jqc8438.github.io/2020/11/ocr/" data-title="【论文笔记】OCR" data-description="Object-Contextual Representations for Semantic Segmentation"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="http://jqc8438.github.io/2020/11/ocr/" data-title="【论文笔记】OCR"><i data-svg-src="/lib/simple-icons/icons/baidu.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://jqc8438.github.io/2020/11/ocr/" data-title="【论文笔记】OCR"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/">语义分割</a>,&nbsp;<a href="/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/">注意力机制</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/2020/11/hrnet/" class="prev" rel="prev" title="【论文笔记】HRNet"><i class="fas fa-angle-left fa-fw"></i>【论文笔记】HRNet</a>
+            <a href="/2020/12/attunet/" class="next" rel="next" title="【论文笔记】Attention U-Net">【论文笔记】Attention U-Net<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.89.4">Hugo</a> 驱动 | 主题 - <a href="https://github.com/sunt-programator/CodeIT" target="_blank" rel="noopener noreferrer" title="CodeIT 0.2.10"><i class="fas fa-laptop-code fa-fw"></i> CodeIT</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">jinhaha</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

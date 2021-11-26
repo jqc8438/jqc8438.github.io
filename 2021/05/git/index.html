@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>【Linux学习】Git学习笔记 - 金哈哈的博客</title><meta name="description" content="git是用于Linux内核开发的版本控制工具。"><meta property="og:title" content="【Linux学习】Git学习笔记" />
+<meta property="og:description" content="git是用于Linux内核开发的版本控制工具。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jqc8438.github.io/2021/05/git/" /><meta property="og:image" content="http://jqc8438.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-05-16T19:20:32+08:00" />
+<meta property="article:modified_time" content="2021-05-16T19:20:32+08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://jqc8438.github.io/logo.png"/>
+
+<meta name="twitter:title" content="【Linux学习】Git学习笔记"/>
+<meta name="twitter:description" content="git是用于Linux内核开发的版本控制工具。"/>
+<meta name="application-name" content="jinhaha">
+<meta name="apple-mobile-web-app-title" content="jinhaha"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://jqc8438.github.io/2021/05/git/" /><link rel="prev" href="http://jqc8438.github.io/2021/03/involution/" /><link rel="next" href="http://jqc8438.github.io/2021/05/mlp/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "【Linux学习】Git学习笔记",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/jqc8438.github.io\/2021\/05\/git\/"
+        },"genre": "posts","keywords": "git, Linux","wordcount":  5335 ,
+        "url": "http:\/\/jqc8438.github.io\/2021\/05\/git\/","datePublished": "2021-05-16T19:20:32+08:00","dateModified": "2021-05-16T19:20:32+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "jinhaha"
+            },"description": "git是用于Linux内核开发的版本控制工具。"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">('true' === 'true' && window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">【Linux学习】Git学习笔记</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>jinhaha</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/linux%E5%AD%A6%E4%B9%A0/"><i class="far fa-folder fa-fw"></i>Linux学习</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-05-16">2021-05-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5335 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 11 分钟&nbsp;</div>
+        </div><div class="featured-image"><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/git.png"
+        data-srcset="/images/git.png, /images/git.png 1.5x, /images/git.png 2x"
+        data-sizes="auto"
+        alt="/images/git.png"
+        title="git是用于Linux内核开发的版本控制工具。" /></div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#写在前面">写在前面</a></li>
+    <li><a href="#一创建版本库">一、创建版本库</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#11-刚开始设置名字邮箱">1.1 刚开始设置名字邮箱</a></li>
+            <li><a href="#12-在需要git管理的目录下使用git-init命令把这个目录变成可以管理的仓库">1.2 在需要git管理的目录下使用<code>git init</code>命令把这个目录变成可以管理的仓库。</a></li>
+            <li><a href="#13-新建一个文件或者修改一个文件后">1.3 新建一个文件，或者修改一个文件后</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#二历史版本回溯">二、历史版本回溯</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#21-使用git-status命令掌握仓库当前的状态">2.1 使用<code>git status</code>命令掌握仓库当前的状态</a></li>
+            <li><a href="#22-可以使用git-diff查看difference修改了什么内容">2.2 可以使用<code>git diff</code>查看difference，修改了什么内容</a></li>
+            <li><a href="#23-使用git-log命令显示从最近到最远的提交日志commmit次数">2.3 使用<code>git log</code>命令显示从最近到最远的提交日志(commmit次数)</a></li>
+            <li><a href="#24-使用git-reset命令退回到上一个版本">2.4 使用<code>git reset</code>命令退回到上一个版本</a></li>
+            <li><a href="#25-工作区和暂存区">2.5 工作区和暂存区</a></li>
+            <li><a href="#26-撤销修改">2.6 撤销修改</a></li>
+            <li><a href="#27-命令git-rm用于删除一个文件">2.7 命令<code>git rm</code>用于删除一个文件</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#三远程仓库">三、远程仓库</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#31-配置本地和远程端的传输协议">3.1 配置本地和远程端的传输协议</a></li>
+            <li><a href="#32添加到远程端">3.2添加到远程端</a></li>
+            <li><a href="#33-从远程库克隆">3.3 从远程库克隆</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#四分支管理">四、分支管理</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#41-分支的创建和合并">4.1 分支的创建和合并</a></li>
+            <li><a href="#42-分支合并中的冲突">4.2 分支合并中的冲突</a></li>
+            <li><a href="#43-禁用fast-forward模式的分支合并">4.3 禁用<code>Fast forward</code>模式的分支合并</a></li>
+            <li><a href="#44-利用git-stash命令保存现场">4.4 利用<code>git stash</code>命令保存现场</a></li>
+            <li><a href="#45-多人协作httpswwwliaoxuefengcomwiki896043488029600900375748016320">4.5 <a href="https://www.liaoxuefeng.com/wiki/896043488029600/900375748016320">多人协作</a></a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#五标签管理">五、标签管理</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#51创建标签">5.1创建标签</a></li>
+            <li><a href="#52-操作标签">5.2 操作标签</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#六-git的可配置项">六、 Git的可配置项</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#61显示颜色">6.1显示颜色</a></li>
+            <li><a href="#62-配置别名">6.2 配置别名</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#七git的gui工具sourcetree">七、Git的GUI工具SourceTree</a></li>
+    <li><a href="#八vscode中git的使用">八、vscode中git的使用</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="写在前面">写在前面</h2>
+<p>偶尔也会使用git，不过大部分就是执行一下git clone，上传blog也就是照着网上的命令打一打，出现什么错误了也不知道什么意思。对git的运行原理，如何版本控制，以及对git与github之间的操作不是很了解。</p>
+<p>下定决心，花了点时间，学习了一个教程，记了一点点小笔记，以供自查。</p>
+<p>教程：<a href="https://www.liaoxuefeng.com/wiki/896043488029600" target="_blank" rel="noopener noreferrer">廖雪峰的Git教程</a></p>
+<h2 id="一创建版本库">一、创建版本库</h2>
+<h4 id="11-刚开始设置名字邮箱">1.1 刚开始设置名字邮箱</h4>
+<p>安装完成后设置一个全局量，说明这个机子上的仓库都是这个人的。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git config --global user.name <span class="s2">&#34;Your Name&#34;</span>
+$ git config --global user.email <span class="s2">&#34;email@example.com&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="12-在需要git管理的目录下使用git-init命令把这个目录变成可以管理的仓库">1.2 在需要git管理的目录下使用<code>git init</code>命令把这个目录变成可以管理的仓库。</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git init
+<span class="c1">#文件夹中会出现一个.git的文件夹，用来管理仓库</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="13-新建一个文件或者修改一个文件后">1.3 新建一个文件，或者修改一个文件后</h4>
+<p>用命令<code>git add</code>告诉Git，把文件添加到仓库：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git add readme.md
+<span class="c1">#这个文件需要添加到仓库</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>用命令<code>git commit</code>告诉Git，把文件提交到仓库：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git commit -m <span class="s2">&#34;wrote a readme file&#34;</span>
+<span class="c1">##-m 命令后面写上本次操作做了啥，用于后续查看</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>个人感觉：在写代码的过程中，git add命令可以多次一直用，git commit最好在实现一个功能什么的之后再使用，不然会形成居多的版本，后期也不利于版本管理。</p>
+<p><strong>至此，已经创建好一个仓库了。</strong></p>
+<h2 id="二历史版本回溯">二、历史版本回溯</h2>
+<h4 id="21-使用git-status命令掌握仓库当前的状态">2.1 使用<code>git status</code>命令掌握仓库当前的状态</h4>
+<p>比如说进行修改后没有add，就会提醒你还没推到仓库。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515214925205.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515214925205.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515214925205.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515214925205.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515214925205.png"
+        title="image-20210515214925205" /></p>
+<p>add后再git status</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515214951775.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515214951775.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515214951775.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515214951775.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515214951775.png"
+        title="image-20210515214951775" /></p>
+<p>commit后再git status</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515215025448.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515215025448.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515215025448.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515215025448.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515215025448.png"
+        title="image-20210515215025448" /></p>
+<p>可以看出三步情况下status不同的状态。</p>
+<h4 id="22-可以使用git-diff查看difference修改了什么内容">2.2 可以使用<code>git diff</code>查看difference，修改了什么内容</h4>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515214024101.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515214024101.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515214024101.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515214024101.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515214024101.png"
+        title="image-20210515214024101" /></p>
+<p>这里就可以看到红色行是原来的，绿色行是改后的</p>
+<h4 id="23-使用git-log命令显示从最近到最远的提交日志commmit次数">2.3 使用<code>git log</code>命令显示从最近到最远的提交日志(commmit次数)</h4>
+<p>使用后，可以看到每次的提交时间，以及加的备注。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515215919505.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515215919505.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515215919505.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515215919505.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210515215919505.png"
+        title="image-20210515215919505" /></p>
+<p>这里进行了两次改变，共有三个版本。其中，最上面的是当前版本，git中一般用HEAD来表示。上一个版本就是<code>HEAD^</code>，上上一个版本就是<code>HEAD^^</code>，当然往上100个版本可以写成<code>HEAD~100</code></p>
+<h4 id="24-使用git-reset命令退回到上一个版本">2.4 使用<code>git reset</code>命令退回到上一个版本</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git reset --hard HEAD^
+HEAD is now at e475afc add distributed
+</code></pre></td></tr></table>
+</div>
+</div><p>git reset命令的本质是一个，Git在内部有个指向当前版本的<code>HEAD</code>指针，这个指针往不同的地方指。</p>
+<p>使用了git reset命令之后，再使用git log命令会发现原来的不见了。可以通过commit代码号找回来</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git reset --hard 7a09ed
+HEAD is now at 83b0afe append GPL
+</code></pre></td></tr></table>
+</div>
+</div><p>如果找不到了，可以使用<code>git reflog</code>命令，<code>git reflog</code>用来记录你的每一次命令，可以找到执行某一次commit的commit号</p>
+<h4 id="25-工作区和暂存区">2.5 工作区和暂存区</h4>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516112216201.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516112216201.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516112216201.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516112216201.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516112216201.png"
+        title="image-20210516112216201" /></p>
+<p>目前文件所放置的区域就是工作区，工作区有一个隐藏目录<code>.git</code>，里面装的是Git的版本库。</p>
+<p>Git的版本库里存了很多东西，其中最重要的就是称为stage（或者叫index）的暂存区，还有Git为我们自动创建的第一个分支<code>master</code>，以及指向<code>master</code>的一个指针叫<code>HEAD</code>。</p>
+<ul>
+<li>用<code>git add</code>把文件添加进去，实际上就是把文件修改添加到暂存区；</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516112239117.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516112239117.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516112239117.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516112239117.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516112239117.png"
+        title="image-20210516112239117" /></p>
+<ul>
+<li>用<code>git commit</code>提交更改，实际上就是把暂存区的所有内容提交到当前分支（如果没有新建分支，那默认的分支就是git给我们默认创建的master分支）。</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516112250620.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516112250620.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516112250620.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516112250620.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516112250620.png"
+        title="image-20210516112250620" /></p>
+<p>当不明确，目前的版本是否已经推送到分支，可以使用<code>git diff HEAD -- readme.txt</code>命令可以查看工作区和版本库里面最新版本的区别</p>
+<h4 id="26-撤销修改">2.6 撤销修改</h4>
+<p>想要撤销修改存在三种情况。</p>
+<ol>
+<li>已经在文件中改了，却还没有git add</li>
+<li>已经git add到暂存区了，还没有git commit</li>
+<li>已经git commit了</li>
+</ol>
+<p>①已经在文件中改了，却还没有git add</p>
+<ul>
+<li>直接手动删了相关修改即可</li>
+<li>或者使用<code>git checkout -- file</code>命令可以丢弃工作区的修改</li>
+</ul>
+<p>②已经git add到暂存区了，还没有git commit</p>
+<p>分两步，第一步用命令<code>git reset HEAD &lt;file&gt;</code>，以把暂存区的修改撤销掉（unstage），重新放回工作区。然后再进行暂存区的修改，即使用<code>git checkout -- file</code>命令</p>
+<p>③已经git commit了</p>
+<p>直接版本回退到上一个版本，<code>git reset --hard HEAD^</code></p>
+<h4 id="27-命令git-rm用于删除一个文件">2.7 命令<code>git rm</code>用于删除一个文件</h4>
+<p>如果删错了，可以使用<code>git checkout -- test.txt</code>把误删的文件恢复到最新版本：</p>
+<p><code>git checkout</code>其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”。</p>
+<h2 id="三远程仓库">三、远程仓库</h2>
+<p>可以使用<code>git remote</code>命令，查看远程库的情况</p>
+<h4 id="31-配置本地和远程端的传输协议">3.1 配置本地和远程端的传输协议</h4>
+<p>本地Git仓库和GitHub仓库之间的传输是通过SSH加密的</p>
+<p><strong>本地端设置</strong></p>
+<p>需要创建SSH Key <code>ssh-keygen -t rsa -C &quot;youremail@example.com&quot;</code>。之后，可以在用户主目录里找到<code>.ssh</code>目录，里面有<code>id_rsa</code>和<code>id_rsa.pub</code>两个文件，这两个就是SSH Key的秘钥对，<code>id_rsa</code>是私钥，不能泄露出去，<code>id_rsa.pub</code>是公钥，可以放心地告诉任何人。</p>
+<p><strong>远程端设置</strong></p>
+<p>在github的SSH keys中添加ssh key</p>
+<p>因为GitHub需要识别出你推送的提交确实是你推送的，而不是别人冒充的，而Git支持SSH协议，所以，GitHub只要知道了你的公钥，就可以确认只有你自己才能推送。</p>
+<h4 id="32添加到远程端">3.2添加到远程端</h4>
+<p>在github上创建好一个新的仓库。</p>
+<p>在本地的<code>learngit</code>仓库下运行命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git remote add origin git@github.com:username/learngit.git
+</code></pre></td></tr></table>
+</div>
+</div><p>这个username是自己的github用户名。</p>
+<p>添加后，远程库的名字就是<code>origin</code>，这是Git默认的叫法，也可以改成别的，但是<code>origin</code>这个名字一看就知道是远程库。</p>
+<p>下一步，就可以把本地库的所有内容推送到远程库上：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git push -u origin master
+<span class="c1">#把本地库的内容推送到远程，用git push命令，实际上是把当前分支master推送到远程。</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>由于远程库是空的，我们第一次推送<code>master</code>分支时，加上了<code>-u</code>参数，Git不但会把本地的<code>master</code>分支内容推送的远程新的<code>master</code>分支，还会把本地的<code>master</code>分支和远程的<code>master</code>分支关联起来，在以后的推送或者拉取时就可以简化命令。</p>
+<p>之后，只要本地做了提交，就可以通过命令，把本地<code>master</code>分支的最新修改推送至GitHub</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">$ git push origin master
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>删除远程库</strong></p>
+<p>如果添加的时候地址写错了，或者就是想删除远程库，可以用<code>git remote rm &lt;name&gt;</code>命令。使用前，建议先用<code>git remote -v</code>查看远程库信息：</p>
+<p>然后，根据名字删除，比如删除<code>origin</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">$ git remote rm origin
+</code></pre></td></tr></table>
+</div>
+</div><p>此处的“删除”其实是解除了本地和远程的绑定关系，并不是物理上删除了远程库。远程库本身并没有任何改动。要真正删除远程库，需要登录到GitHub，在后台页面找到删除按钮再删除。</p>
+<h4 id="33-从远程库克隆">3.3 从远程库克隆</h4>
+<p>要克隆一个仓库，首先必须知道仓库的地址，然后使用<code>git clone</code>命令克隆。</p>
+<p>Git支持多种协议，包括<code>https</code>，但<code>ssh</code>协议速度最快。</p>
+<h2 id="四分支管理">四、分支管理</h2>
+<blockquote>
+<p>分支在实际中有什么用呢？假设你准备开发一个新功能，但是需要两周才能完成，第一周你写了50%的代码，如果立刻提交，由于代码还没写完，不完整的代码库会导致别人不能干活了。如果等代码全部写完再一次提交，又存在丢失每天进度的巨大风险。现在有了分支，就不用怕了。你创建了一个属于你自己的分支，别人看不到，还继续在原来的分支上正常工作，而你在自己的分支上干活，想提交就提交，直到开发完毕后，再一次性合并到原来的分支上，这样，既安全，又不影响别人工作。</p>
+</blockquote>
+<h4 id="41-分支的创建和合并">4.1 分支的创建和合并</h4>
+<p><strong>图的形式理解分支</strong></p>
+<p>master分支是主分支，事实上他是一个指针。<code>HEAD</code>严格来说不是指向提交，而是指向<code>master</code>，<code>master</code>才是指向提交的，所以，<code>HEAD</code>指向的就是当前分支。</p>
+<p>一开始的时候，<code>master</code>分支是一条线，Git用<code>master</code>指向最新的提交，再用<code>HEAD</code>指向<code>master</code>，就能确定当前分支，以及当前分支的提交点：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154652551.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154652551.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154652551.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154652551.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154652551.png"
+        title="image-20210516154652551" /></p>
+<p>现在创建一个新的分支，例如<code>dev</code>时，也就是Git新建了一个指针叫<code>dev</code>，指向<code>master</code>相同的提交，再把<code>HEAD</code>指向<code>dev</code>，就表示此时的当前分支在<code>dev</code>上：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154810991.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154810991.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154810991.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154810991.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154810991.png"
+        title="image-20210516154810991" /></p>
+<p>接下来，对工作区的修改和提交就是针对<code>dev</code>分支了，比如新提交一次后，<code>dev</code>指针往前移动一步，而<code>master</code>指针不变：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154844115.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154844115.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154844115.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154844115.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154844115.png"
+        title="image-20210516154844115" /></p>
+<p>之后，如果我们在<code>dev</code>上的工作完成了，想把<code>dev</code>合并到<code>master</code>上。最简单的方法，就是直接把<code>master</code>指向<code>dev</code>的当前提交，就完成了合并：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154950474.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154950474.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154950474.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154950474.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154950474.png"
+        title="image-20210516154950474" /></p>
+<p>合并完分支后，甚至可以删除<code>dev</code>分支。删除<code>dev</code>分支就是把<code>dev</code>指针给删掉，删掉后，我们就剩下了一条<code>master</code>分支：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516155021674.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516155021674.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516155021674.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516155021674.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516155021674.png"
+        title="image-20210516155021674" /></p>
+<p><strong>分支的代码实现</strong></p>
+<p>可以将上面的步骤代码实现：</p>
+<p>1.创建<code>dev</code>分支，然后切换到<code>dev</code>分支：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git checkout -b dev或者使用$ git switch -c dev#Switched to a new branch <span class="s1">&#39;dev&#39;</span><span class="c1">#git checkout命令加上-b参数表示创建并切换</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>可以使用<code>git branch</code>命令查看当前分支</p>
+<p>2.对内容进行更改后add，commit。并切换回master主分支</p>
+<p>如果这个时候查看文件，发现是修改之前的内容。因为是在master主分支上并没有进行过修改</p>
+<p>3.把<code>dev</code>分支的工作成果合并到<code>master</code>分支上</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git merge dev#git merge命令用于合并指定分支到当前分支
+</code></pre></td></tr></table>
+</div>
+</div><p>4.合并完成后，删除<code>dev</code>分支：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">git branch -d dev#Deleted branch dev
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>switch命令</strong></p>
+<p>最新版本的Git提供了新的<code>git switch</code>命令来切换分支：</p>
+<p>创建并切换到新的<code>dev</code>分支，可以使用：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">$ git switch -c dev
+</code></pre></td></tr></table>
+</div>
+</div><p>直接切换到已有的<code>master</code>分支，可以使用：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">$ git switch master
+</code></pre></td></tr></table>
+</div>
+</div><p>使用新的<code>git switch</code>命令，比<code>git checkout</code>要更容易理解。</p>
+<p><strong>命令总结</strong>：</p>
+<p>查看分支：<code>git branch</code></p>
+<p>创建分支：<code>git branch &lt;name&gt;</code></p>
+<p>切换分支：<code>git checkout &lt;name&gt;</code>或者<code>git switch &lt;name&gt;</code></p>
+<p>创建+切换分支：<code>git checkout -b &lt;name&gt;</code>或者<code>git switch -c &lt;name&gt;</code></p>
+<p>合并某分支到当前分支：<code>git merge &lt;name&gt;</code></p>
+<p>删除分支：<code>git branch -d &lt;name&gt;</code></p>
+<h4 id="42-分支合并中的冲突">4.2 分支合并中的冲突</h4>
+<p>如果出现不同的分支都进行的提交，分支都往前进了，这时候合并就可能会有冲突。（比如对同一个地方做不同的更改）</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516163125472.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516163125472.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516163125472.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516163125472.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516163125472.png"
+        title="image-20210516163125472" /></p>
+<p>这样使用合并命令后，需要手动去修改。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516163638666.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516163638666.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516163638666.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516163638666.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516163638666.png"
+        title="image-20210516163638666" /></p>
+<blockquote>
+<p>用<code>git log --graph</code>命令可以看到分支合并图。</p>
+</blockquote>
+<p>最后，删除子分支。</p>
+<h4 id="43-禁用fast-forward模式的分支合并">4.3 禁用<code>Fast forward</code>模式的分支合并</h4>
+<p>之前fast forward的分支合并是这样的:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154950474.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154950474.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154950474.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154950474.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516154950474.png"
+        title="image-20210516154950474" /></p>
+<p>禁用fast forward的分支合并是这样的：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516164753525.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516164753525.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516164753525.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516164753525.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516164753525.png"
+        title="image-20210516164753525" /></p>
+<p>使用的命令是</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">git merge --no-ff -m <span class="s2">&#34;merge with no-ff&#34;</span> dev#因为本次合并要创建一个新的commit，所以加上-m参数，把commit描述写进去。
+</code></pre></td></tr></table>
+</div>
+</div><p>合并分支时，加上<code>--no-ff</code>参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并，而<code>fast forward</code>合并就看不出来曾经做过合并。</p>
+<h4 id="44-利用git-stash命令保存现场">4.4 利用<code>git stash</code>命令保存现场</h4>
+<p>暂时不想提交当前分支正在做的工作，又需要去其他分支工作。可以利用<code>git stash</code>命令保存现场</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">git stash##该分支里的内容就被藏起来了
+</code></pre></td></tr></table>
+</div>
+</div><p>用<code>git stash list</code>命令查看藏起来的内容</p>
+<p>用<code>git stash pop</code>，恢复的同时把stash内容也删了</p>
+<h4 id="45-多人协作httpswwwliaoxuefengcomwiki896043488029600900375748016320">4.5 <a href="https://www.liaoxuefeng.com/wiki/896043488029600/900375748016320" target="_blank" rel="noopener noreferrer">多人协作</a></h4>
+<blockquote>
+<ul>
+<li>查看远程库信息，使用<code>git remote -v</code>；</li>
+<li>本地新建的分支如果不推送到远程，对其他人就是不可见的；</li>
+<li>从本地推送分支，使用<code>git push origin branch-name</code>，如果推送失败，先用<code>git pull</code>抓取远程的新提交；</li>
+<li>在本地创建和远程分支对应的分支，使用<code>git checkout -b branch-name origin/branch-name</code>，本地和远程分支的名称最好一致；</li>
+<li>建立本地分支和远程分支的关联，使用<code>git branch --set-upstream branch-name origin/branch-name</code>；</li>
+<li>从远程抓取分支，使用<code>git pull</code>，如果有冲突，要先处理冲突。</li>
+</ul>
+</blockquote>
+<h2 id="五标签管理">五、标签管理</h2>
+<p>标签也是一个指针，可以理解为commit号的简化版。比如发布不同的版本时候，可以有不同的标签。</p>
+<h4 id="51创建标签">5.1创建标签</h4>
+<p>敲命令<code>git tag &lt;name&gt;</code>就可以打一个新标签：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git tag v1.0
+</code></pre></td></tr></table>
+</div>
+</div><p>可以用命令<code>git tag</code>查看所有标签：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git tagv1.0
+</code></pre></td></tr></table>
+</div>
+</div><p>默认标签是打在最新提交的commit上的。如果想给历史commit打标签，找到历史提交的commit id，然后打上就可以了。</p>
+<p>比方说要对某次提交打标签，它对应的commit id是<code>f52c633</code>，敲入命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git tag v0.9 f52c633
+</code></pre></td></tr></table>
+</div>
+</div><p>还可以创建带有说明的标签，用<code>-a</code>指定标签名，<code>-m</code>指定说明文字：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git tag -a v0.1 -m <span class="s2">&#34;version 0.1 released&#34;</span> 1094adb
+</code></pre></td></tr></table>
+</div>
+</div><p>可以用<code>git show &lt;tagname&gt;</code>查看标签信息</p>
+<h4 id="52-操作标签">5.2 操作标签</h4>
+<p>如果标签打错了，也可以删除：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git tag -d v0.1
+</code></pre></td></tr></table>
+</div>
+</div><p>如果要推送某个标签到远程，使用命令<code>git push origin &lt;tagname&gt;</code>：</p>
+<p>或者，一次性推送全部尚未推送到远程的本地标签<code>git push origin --tags</code></p>
+<h2 id="六-git的可配置项">六、 Git的可配置项</h2>
+<h4 id="61显示颜色">6.1显示颜色</h4>
+<p>比如，让Git显示颜色，会让命令输出看起来更醒目：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">$ git config --global color.ui true
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="62-配置别名">6.2 配置别名</h4>
+<p>如果敲<code>git st</code>就表示<code>git status</code>那就简单多了，当然这种偷懒的办法我们是极力赞成的。</p>
+<p>我们只需要敲一行命令，告诉Git，以后<code>st</code>就表示<code>status</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git config --global alias.st status
+</code></pre></td></tr></table>
+</div>
+</div><p>当然还有别的命令可以简写，很多人都用<code>co</code>表示<code>checkout</code>，<code>ci</code>表示<code>commit</code>，<code>br</code>表示<code>branch</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git config --global alias.co checkout$ git config --global alias.ci commit$ git config --global alias.br branch
+</code></pre></td></tr></table>
+</div>
+</div><p>配置一个<code>git last</code>，让其显示最后一次提交信息：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ git config --global alias.last <span class="s1">&#39;log -1&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>甚至可以把<code>lg</code>配置成了：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">git config --global alias.lg <span class="s2">&#34;log --color --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516175625448.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516175625448.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516175625448.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516175625448.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210516175625448.png"
+        title="image-20210516175625448" /></p>
+<p>就有这样的效果</p>
+<h2 id="七git的gui工具sourcetree">七、Git的GUI工具SourceTree</h2>
+<p>SourceTree里可以add，commit等</p>
+<h2 id="八vscode中git的使用">八、vscode中git的使用</h2>
+<p>因为平时写代码还是会在一些平台上写的，每次都打开git的页面版本控制肯定会很麻烦。不过这些这些软件一般都会提供版本控制的。vscode和pycharm本身也有可以支持git。可以寻找各种帖子，有详细解释。</p></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-05-16</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://jqc8438.github.io/2021/05/git/" data-title="【Linux学习】Git学习笔记" data-hashtags="git,Linux"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://jqc8438.github.io/2021/05/git/" data-hashtag="git"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://jqc8438.github.io/2021/05/git/" data-title="【Linux学习】Git学习笔记" data-image="/images/git.png"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://jqc8438.github.io/2021/05/git/" data-title="【Linux学习】Git学习笔记" data-description="git是用于Linux内核开发的版本控制工具。"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="http://jqc8438.github.io/2021/05/git/" data-title="【Linux学习】Git学习笔记"><i data-svg-src="/lib/simple-icons/icons/baidu.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://jqc8438.github.io/2021/05/git/" data-title="【Linux学习】Git学习笔记"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/git/">git</a>,&nbsp;<a href="/tags/linux/">Linux</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/2021/03/involution/" class="prev" rel="prev" title="【论文笔记】Involution"><i class="fas fa-angle-left fa-fw"></i>【论文笔记】Involution</a>
+            <a href="/2021/05/mlp/" class="next" rel="next" title="【论文笔记】MLP杀疯了？四篇初代MLP论文笔记">【论文笔记】MLP杀疯了？四篇初代MLP论文笔记<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.89.4">Hugo</a> 驱动 | 主题 - <a href="https://github.com/sunt-programator/CodeIT" target="_blank" rel="noopener noreferrer" title="CodeIT 0.2.10"><i class="fas fa-laptop-code fa-fw"></i> CodeIT</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">jinhaha</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

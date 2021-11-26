@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+    <channel>
+        <title>MobileNet - 标签 - 金哈哈的博客</title>
+        <link>http://jqc8438.github.io/tags/mobilenet/</link>
+        <description>MobileNet - 标签 - 金哈哈的博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 28 Oct 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="http://jqc8438.github.io/tags/mobilenet/" rel="self" type="application/rss+xml" /><item>
+    <title>【论文笔记】MobileNet</title>
+    <link>http://jqc8438.github.io/2021/10/mobilenet/</link>
+    <pubDate>Thu, 28 Oct 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/10/mobilenet/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/MobileNet.png" referrerpolicy="no-referrer">
+            </div>MobileNets是为移动和嵌入式设备提出的高效模型，包括v1-v3]]></description>
+</item></channel>
+</rss>

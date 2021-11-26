@@ -1,0 +1,77 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+    <channel>
+        <title>论文笔记 - 分类 - 金哈哈的博客</title>
+        <link>http://jqc8438.github.io/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</link>
+        <description>论文笔记 - 分类 - 金哈哈的博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 10 Nov 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="http://jqc8438.github.io/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="self" type="application/rss+xml" /><item>
+    <title>【论文笔记】ShuffleNet</title>
+    <link>http://jqc8438.github.io/2021/11/shufflenet/</link>
+    <pubDate>Wed, 10 Nov 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/11/shufflenet/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/ShuffleNet.png" referrerpolicy="no-referrer">
+            </div>ShuffleNet是旷视科技最近提出的一种计算高效的CNN模型，包括v1和v2]]></description>
+</item><item>
+    <title>【论文笔记】GAN基础与代码解读（GAN、CGAN、pix2pix、CycleGAN）</title>
+    <link>http://jqc8438.github.io/2021/11/gan/</link>
+    <pubDate>Tue, 02 Nov 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/11/gan/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/GAN.jpg" referrerpolicy="no-referrer">
+            </div>（GAN、CGAN、pix2pix、CycleGAN）]]></description>
+</item><item>
+    <title>【论文笔记】MobileNet</title>
+    <link>http://jqc8438.github.io/2021/10/mobilenet/</link>
+    <pubDate>Thu, 28 Oct 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/10/mobilenet/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/MobileNet.png" referrerpolicy="no-referrer">
+            </div>MobileNets是为移动和嵌入式设备提出的高效模型，包括v1-v3]]></description>
+</item><item>
+    <title>【论文笔记】MLP杀疯了？四篇初代MLP论文笔记</title>
+    <link>http://jqc8438.github.io/2021/05/mlp/</link>
+    <pubDate>Mon, 17 May 2021 22:05:56 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/05/mlp/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/MLP.png" referrerpolicy="no-referrer">
+            </div>]]></description>
+</item><item>
+    <title>【论文笔记】Involution</title>
+    <link>http://jqc8438.github.io/2021/03/involution/</link>
+    <pubDate>Sun, 14 Mar 2021 14:09:10 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/03/involution/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/Involution.png" referrerpolicy="no-referrer">
+            </div>Involution: Inverting the Inherence of Convolution for Visual Recognition]]></description>
+</item><item>
+    <title>【论文笔记】RepVGG</title>
+    <link>http://jqc8438.github.io/2021/01/repvgg/</link>
+    <pubDate>Tue, 19 Jan 2021 14:09:10 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/01/repvgg/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/RepVGG.png" referrerpolicy="no-referrer">
+            </div>RepVGG: Making VGG-style ConvNets Great Again]]></description>
+</item><item>
+    <title>【论文笔记】SENet</title>
+    <link>http://jqc8438.github.io/2020/12/senet/</link>
+    <pubDate>Tue, 08 Dec 2020 14:09:10 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2020/12/senet/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/SENet.png" referrerpolicy="no-referrer">
+            </div>Squeeze-and-Excitation Network]]></description>
+</item><item>
+    <title>【论文笔记】Attention U-Net</title>
+    <link>http://jqc8438.github.io/2020/12/attunet/</link>
+    <pubDate>Sat, 05 Dec 2020 09:46:59 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2020/12/attunet/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/attunet.png" referrerpolicy="no-referrer">
+            </div>Attention U-Net:Learning Where to Look for the Pancreas]]></description>
+</item><item>
+    <title>【论文笔记】OCR</title>
+    <link>http://jqc8438.github.io/2020/11/ocr/</link>
+    <pubDate>Wed, 25 Nov 2020 09:54:00 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2020/11/ocr/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/ocr_seg.png" referrerpolicy="no-referrer">
+            </div>Object-Contextual Representations for Semantic Segmentation]]></description>
+</item><item>
+    <title>【论文笔记】HRNet</title>
+    <link>http://jqc8438.github.io/2020/11/hrnet/</link>
+    <pubDate>Thu, 19 Nov 2020 21:35:13 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2020/11/hrnet/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/HRNet.png" referrerpolicy="no-referrer">
+            </div>Deep high-resolution representation learning for visual recognition ]]></description>
+</item></channel>
+</rss>

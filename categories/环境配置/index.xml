@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+    <channel>
+        <title>环境配置 - 分类 - 金哈哈的博客</title>
+        <link>http://jqc8438.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link>
+        <description>环境配置 - 分类 - 金哈哈的博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 06 Nov 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="http://jqc8438.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="self" type="application/rss+xml" /><item>
+    <title>【环境配置】Miniconda-不设环境变量/北外源</title>
+    <link>http://jqc8438.github.io/2021/11/miniconda/</link>
+    <pubDate>Sat, 06 Nov 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/11/miniconda/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/miniconda.png" referrerpolicy="no-referrer">
+            </div>Miniconda is a free minimal installer for conda. It is a small, bootstrap version of Anaconda]]></description>
+</item></channel>
+</rss>

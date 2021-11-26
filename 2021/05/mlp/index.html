@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>【论文笔记】MLP杀疯了？四篇初代MLP论文笔记 - 金哈哈的博客</title><meta name="description" content="这是金哈哈的博客"><meta property="og:title" content="【论文笔记】MLP杀疯了？四篇初代MLP论文笔记" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jqc8438.github.io/2021/05/mlp/" /><meta property="og:image" content="http://jqc8438.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-05-17T22:05:56+08:00" />
+<meta property="article:modified_time" content="2021-05-17T22:05:56+08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://jqc8438.github.io/logo.png"/>
+
+<meta name="twitter:title" content="【论文笔记】MLP杀疯了？四篇初代MLP论文笔记"/>
+<meta name="twitter:description" content=""/>
+<meta name="application-name" content="jinhaha">
+<meta name="apple-mobile-web-app-title" content="jinhaha"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://jqc8438.github.io/2021/05/mlp/" /><link rel="prev" href="http://jqc8438.github.io/2021/05/git/" /><link rel="next" href="http://jqc8438.github.io/2021/10/tmux/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "【论文笔记】MLP杀疯了？四篇初代MLP论文笔记",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/jqc8438.github.io\/2021\/05\/mlp\/"
+        },"genre": "posts","keywords": "MLP, 结构重参数化","wordcount":  7443 ,
+        "url": "http:\/\/jqc8438.github.io\/2021\/05\/mlp\/","datePublished": "2021-05-17T22:05:56+08:00","dateModified": "2021-05-17T22:05:56+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "jinhaha"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">('true' === 'true' && window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">【论文笔记】MLP杀疯了？四篇初代MLP论文笔记</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>jinhaha</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"><i class="far fa-folder fa-fw"></i>论文笔记</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-05-17">2021-05-17</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 7443 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 15 分钟&nbsp;</div>
+        </div><div class="featured-image"><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/MLP.png"
+        data-srcset="/images/MLP.png, /images/MLP.png 1.5x, /images/MLP.png 2x"
+        data-sizes="auto"
+        alt="/images/MLP.png"
+        title="/images/MLP.png" /></div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#写在前面">写在前面</a></li>
+    <li><a href="#1mlp-mixer">1、MLP-Mixer</a>
+      <ul>
+        <li><a href="#11-模型的输入分patch">1.1 模型的输入，分patch</a></li>
+        <li><a href="#12-模型框架mlp-layers">1.2 模型框架，MLP layers</a></li>
+        <li><a href="#13-代码">1.3 代码</a></li>
+      </ul>
+    </li>
+    <li><a href="#2external-attention">2、External Attention</a>
+      <ul>
+        <li><a href="#21-self-attentio的缺陷">2.1 self-attentio的缺陷</a></li>
+        <li><a href="#22-self-attention-vs-external-attention">2.2 self-attention vs External Attention</a></li>
+        <li><a href="#23-double-normalization">2.3 double-normalization</a></li>
+        <li><a href="#24-实验">2.4 实验</a></li>
+        <li><a href="#25-代码">2.5 代码</a></li>
+      </ul>
+    </li>
+    <li><a href="#3repmlp">3、RepMLP</a>
+      <ul>
+        <li><a href="#31-卷积和mlp处理图像的优缺点">3.1 卷积和MLP处理图像的优缺点</a></li>
+        <li><a href="#32-repmlp模块">3.2 RepMLP模块</a></li>
+        <li><a href="#33-将卷积变成全连接怎么变">3.3 将卷积变成全连接？怎么变？</a></li>
+        <li><a href="#font-colorred-34-总结和思考font"><font color='red'> 3.4 总结和思考</font></a></li>
+        <li><a href="#参考">参考</a></li>
+      </ul>
+    </li>
+    <li><a href="#4do-you-even-need-attention">4、Do You Even Need Attention?</a>
+      <ul>
+        <li><a href="#41-将attention层换成了feed-forward层">4.1 将attention层换成了feed-forward层</a></li>
+        <li><a href="#42-具体的代码实现">4.2 具体的代码实现</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="写在前面">写在前面</h2>
+<p>最近一篇文章《CV圈杀疯了！继谷歌后，清华、牛津等学者又发表三篇MLP相关论文。。。》到处转发，也有很多人第一时间写了解析，本来还在研究transfomer的我也懵了。这边还没搞清楚呢，又来新的~~于是也不免俗的追一下热点吧，简单了写了一下四篇初代MLP的笔记，也就是在上面文章中出现的四篇。</p>
+<p>1.MLP-Mixer: An all-MLP Architecture for Vision</p>
+<p>2.Beyond Self-attention: External Attention using Two Linear Layers for Visual Tasks</p>
+<p>3.RepMLP: Re-parameterizing Convolutions into Fully-connected Layers for Image Recognition</p>
+<p>4.Do You Even Need Attention? A Stack of Feed-Forward Layers Does Surprisingly Well on ImageNet</p>
+<p><strong>回味一下多层感知机</strong></p>
+<p>MLP(multi-layer perceptrons)，中文就是多层感知机。刚才是接触神经网络的时候，好像就是最先接触的这个东西。就是如下图所示的这么一个东西。有输入层，隐藏层，输出层什么的，最后给个预测结果。如果学习过机器学习的一些基础课程，应该都接触过这么个东西。其实也又称之为多层全连接神经网络。也就是大量的矩阵运算balabala~~</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210510210858918.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210510210858918.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210510210858918.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210510210858918.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210510210858918.png"
+        title="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210510210858918.png" /></p>
+<h2 id="1mlp-mixer">1、MLP-Mixer</h2>
+<p><strong>原文</strong>：MLP-Mixer: An all-MLP Architecture for Vision（arXiv:2105.01601）</p>
+<p><strong>论文链接</strong>: <a href="https://arxiv.org/abs/2105.01601" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2105.01601</a></p>
+<p><strong>pytorch</strong>复现代码:https://github.com/d-li14/mlp-mixer.pytorch</p>
+<p>好像说是谷歌是VIT团队的论文。还特意去对比了一下作者，果然好几个人都是一样的。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210510211256502.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210510211256502.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210510211256502.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210510211256502.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210510211256502.png"
+        title="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210510211256502.png" /></p>
+<h3 id="11-模型的输入分patch">1.1 模型的输入，分patch</h3>
+<p>模型的整体框架如上所示，乍一看，还以为是transformer，输入都是分patch后作为输入，和transformer图很像了。当然了，后续的操作肯定还是不一样的。简单解释一下，比如一张$256 \times 256$的图，patch的大小是$32\times 32$。那么他就可以得到64个patch，每个patch的参数维度为$32\times 32\times 3 = 3072$，也就是说这样的输入维度为
+$$
+\mathbb{R}^{b \times 64 \times 3072}
+$$
+其中，b是batchsize。输入的形式和VIT应该是一致的。</p>
+<p>顺带提一下。对于图像的低级任务，像去雾去噪超分辨等，好像最早就有说分patch去做的，单patch的超分辨去噪似乎也没太大影响，所以早期应该是有方法ptach在MLP处理的方法吧（其实我也不确定）。至于比较高级的涉及语义的任务，分类，分割什么的就不知道有没有了~~</p>
+<h3 id="12-模型框架mlp-layers">1.2 模型框架，MLP layers</h3>
+<p>从input进入，首先经历一个per-patch fully-connected，其实也就是个embedding的操作。然后进入一个N次的Mixer Layer。最后池化+全连接，得到后续的分类结果</p>
+<p>文章中的MLP layers区分成了两种，channel-mixing MLPs and token-mixing MLPs</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511095606346.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511095606346.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511095606346.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511095606346.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511095606346.png"
+        title="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511095606346.png" /></p>
+<p>图中，紫色框框就是token-mixing MLPs，绿色框框是channel-mixing MLPs。token-mix无非就是使得不同像素间有通信，channel-mix就是使得不同的channel间有通信。作者也提到了channel-mixing MLPs类似于1x1的卷积，token-mixing MLPs类似于卷积核为n的卷积。</p>
+<p>在MLP layers之中，先进行一次token-mixing MLP，再进行一次channel-mixing MLP 。</p>
+<h3 id="13-代码">1.3 代码</h3>
+<p>直接看看代码吧，官方的代码是JAX/Flax框架的。</p>
+<p>在guthub上找了一个pytorch复现的版本：https://github.com/d-li14/mlp-mixer.pytorch</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+
+
+<span class="k">class</span> <span class="nc">MlpBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">mlp_dim</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MlpBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">mlp_dim</span><span class="p">),</span>  
+            <span class="n">nn</span><span class="o">.</span><span class="n">GELU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">mlp_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">)</span>  
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1">##每一次的全连接中间有个隐藏层，经过隐藏层再回到与输入一致的维度大小。</span>
+
+
+<span class="k">class</span> <span class="nc">MixerBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_tokens</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">tokens_mlp_dim</span><span class="p">,</span> <span class="n">channels_mlp_dim</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MixerBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ln_token</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_mix</span> <span class="o">=</span> <span class="n">MlpBlock</span><span class="p">(</span><span class="n">num_tokens</span><span class="p">,</span> <span class="n">tokens_mlp_dim</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">ln_channel</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channel_mix</span> <span class="o">=</span> <span class="n">MlpBlock</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">channels_mlp_dim</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ln_token</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_mix</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">##先进行一次token-mixing MLP</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ln_channel</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel_mix</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="c1">##再进行一次channel-mixing MLP</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+
+<span class="k">class</span> <span class="nc">MlpMixer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="c1">##描述整体的MLP-Mixer框架</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">,</span> <span class="n">patch_size</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">tokens_mlp_dim</span><span class="p">,</span> <span class="n">channels_mlp_dim</span><span class="p">,</span> <span class="n">image_size</span><span class="o">=</span><span class="mi">224</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MlpMixer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">num_tokens</span> <span class="o">=</span> <span class="p">(</span><span class="n">image_size</span> <span class="o">//</span> <span class="n">patch_size</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">patch_emb</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">patch_size</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">patch_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">MixerBlock</span><span class="p">(</span><span class="n">num_tokens</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">tokens_mlp_dim</span><span class="p">,</span> <span class="n">channels_mlp_dim</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_blocks</span><span class="p">)])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ln</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_emb</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">##制造生成分patch的input</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1">#进行n次mlp layer</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ln</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#average pooling的操作</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1">#全连接至分类数</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+
+<span class="k">def</span> <span class="nf">mixer_s32</span><span class="p">(</span><span class="n">num_classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">MlpMixer</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="2external-attention">2、External Attention</h2>
+<p><strong>原文</strong>：Beyond Self-attention: External Attention using Two Linear Layers for Visual Tasks（arXiv:2105.02358）</p>
+<p><strong>论文链接</strong>: <a href="https://arxiv.org/abs/2105.02358" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2105.02358</a></p>
+<p><strong>官方Jittor和torch代码</strong>:https://github.com/MenghaoGuo/-EANet</p>
+<p>清华计图团队的工作，所以代码也是有一份jittor框架的代码。</p>
+<p>这篇文章提出了一种新型的attention机制，可能是因为这种attention机制的线性性质，所以会在MLP这个板块中出现。感觉还是蛮有意思的。思想也不复杂。用文章摘要的一句话就是：</p>
+<blockquote>
+<p>This paper proposes a novel attention mechanism which we call external attention, based on two external, small, learnable, and shared memories, which can be implemented easily by simply using two cascaded linear layers and two normalization layers</p>
+</blockquote>
+<p>两个外部的、小的、可学习的和共享的存储器，存储器？是个啥？</p>
+<h3 id="21-self-attentio的缺陷">2.1 self-attentio的缺陷</h3>
+<p>从摘要到introduction，作者一直都有说self-attention的缺陷在于：1.计算量大，2.他只局限于当前样本，没有关注数据集中的其他样本，缺乏信息的交互。比如说，在分割任务中，在不同样本中也存在着同一类别的特征，其他样本的特征，能否辅助该样本的分割呢。</p>
+<h3 id="22-self-attention-vs-external-attention">2.2 self-attention vs External Attention</h3>
+<p>文章通过对比self-attention来引出external attention。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511155616535.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511155616535.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511155616535.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511155616535.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511155616535.png"
+        title="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511155616535.png" /></p>
+<p>对于上图a就是经典的self-attention。通过先将feature map投影到QKV，通过Q,K计算注意力权重，最后分配到V上：</p>
+<p>$$
+\begin{aligned}
+A = \alpha_{i, j}&amp;=\operatorname{softmax}\left(Q K^{T}\right) \\
+F_{\text {out }} &amp;=A V
+\end{aligned}
+$$</p>
+<p>b展示的是a的简化版，即无需投影，所有操作对feature map直接操作：</p>
+<p>$$
+\begin{aligned}
+A &amp;=\operatorname{softmax}\left(F F^{T}\right) \\
+F_{\text {out }} &amp;=A F
+\end{aligned}
+$$</p>
+<p>c展示也就是文章所提出的external attention，文章中给出的公式是：</p>
+<p>$$
+\begin{aligned}
+A &amp;=\operatorname{Norm}\left(F M_{k}^{T}\right) \\
+F_{\text {out }} &amp;=A M_{v}
+\end{aligned}
+$$</p>
+<p>其中这个A表示了注意力图。$M_{k}$ 和 $M_{v}$是两个不同的记忆单元。$M \in \mathbb{R}^{S \times d}$</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511192558315.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511192558315.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511192558315.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511192558315.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511192558315.png"
+        title="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210511192558315.png" /></p>
+<p>文章也给出了一个EA操作用于语义分割的框架图，可以看出，在backbone之后引入该模块。EA操作的前后还是给出一个shortcut，类似resnet，使用了sumation将前后直接相加起来。这个后面带个MLP操作不知道是个什么意思，文章里貌似也没看到什么说法。代码中，好像也没个，最后也就是卷积加个上采样的操作。</p>
+<h3 id="23-double-normalization">2.3 double-normalization</h3>
+<p>EA操作中，norm操作使用的是double-normalization。文章中说是为了避免输入特征的比例敏感，相当于做的两次norm。</p>
+<div>
+$$
+\begin{aligned}
+(\tilde{\alpha})_{i, j} &=F M_{k}^{T} \\\\
+\alpha_{i, j} &=\frac{\exp \left(\tilde{\alpha}_{i, j}\right)}{\sum_{k} \exp \left(\tilde{\alpha}_{k, j}\right)} \\\\
+\alpha_{i, j} &=\frac{\alpha_{i, j}}{\sum_{k} \alpha_{i, k}}
+\end{aligned}
+$$
+<div/>
+<h3 id="24-实验">2.4 实验</h3>
+<p>文章的实验做的很多，包括图像分类、语义分割、图像生成、点云分类和点云分割等任务，应该还是想验证该注意力对高级任务的有效性，就像前面提到的分割的例子一样。EA操作，又节省复杂度，又能使得sample之间也获得关联。</p>
+<h3 id="25-代码">2.5 代码</h3>
+<p><strong>官方Jittor和torch代码</strong>:https://github.com/MenghaoGuo/-EANet</p>
+<p><strong>External_attention的代码：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">External_attention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="s1">&#39;&#39;&#39;
+</span><span class="s1">    Arguments:
+</span><span class="s1">        c (int): The input and output channel number.
+</span><span class="s1">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">External_attention</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="mi">64</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear_0</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear_1</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_0</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">norm_layer</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>        
+        
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">):</span>
+                <span class="n">n</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="o">.</span><span class="n">out_channels</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.</span> <span class="o">/</span> <span class="n">n</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">):</span>
+                <span class="n">n</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="o">.</span><span class="n">out_channels</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.</span> <span class="o">/</span> <span class="n">n</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">_BatchNorm</span><span class="p">):</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fill_</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">m</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span>
+ 
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">idn</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="c1">##刚进EA模块的时候是一个正常的四维的特征图。比如1*512*16*16</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>  <span class="c1">## 1 512 16 16</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">h</span><span class="o">*</span><span class="n">w</span>  <span class="c1">## n=16*16=256</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">h</span><span class="o">*</span><span class="n">w</span><span class="p">)</span>   <span class="c1"># b * c * n   1*512*256</span>
+
+        <span class="n">attn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_0</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># b, k, n    用kernel为1的1d卷积，得到 1*64*256</span>
+        <span class="c1">#实际上这一步的1x1卷积就是将输入乘上一个(512x64)的可学习的卷积。</span>
+        <span class="n">attn</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">attn</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># b, k, n</span>
+
+        <span class="n">attn</span> <span class="o">=</span> <span class="n">attn</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1e-9</span> <span class="o">+</span> <span class="n">attn</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span> <span class="c1">#  # b, k, n</span>
+        <span class="c1">##进行两次norm的操作，即double-normalization</span>
+        
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_1</span><span class="p">(</span><span class="n">attn</span><span class="p">)</span> <span class="c1"># b, c, n</span>
+        <span class="c1">#再进行第二次的矩阵乘法 从1*64*256重新变回1*512*256</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span><span class="c1">#变回四维 1*512*16*16</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1">#卷积 1*512*16*16 -&gt; 1*512*16*16</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">idn</span>  <span class="c1">#与输入直接值相加  1*512*16*16 -&gt; 1*512*16*16</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="3repmlp">3、RepMLP</h2>
+<p><strong>原文</strong>：RepMLP: Re-parameterizing Convolutions into Fully-connected Layers for Image Recognition（arXiv:2105.02358）</p>
+<p><strong>论文链接</strong>: <a href="https://arxiv.org/abs/2105.01883" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2105.01883</a></p>
+<p><strong>官方pytorch代码</strong>:https://github.com/DingXiaoH/RepMLP</p>
+<p>清华丁霄汉的工作，最早关注他的工作是ICCV2019的ACNet(1908.03930)（用三个不同的卷积核的三通路卷积来训练，用一个3X3卷积核在测试）。他后续的工作也是主要是在结构重参数化。今年的CVPR2021中，也 有两篇相关的工作，分别是RepVGG和DiverseBranchBlock。对结构重参数化感兴趣的，可以关注一下这个大佬。</p>
+<p>结构重参数化，简而言之。就是结构（或者说是模型）A对应一组参数X，结构B对应一组参数Y，如果我们能将X等价转换为Y，就能将结构A等价转换为B。在实际的使用中，使用一个较为复杂的网络进行训练，再想办法将这个复杂的网络简化，最终得到的效果是一致的。也就是说，对于同样一个输入，这个复杂的网络和简化的网络能得到完全一致的输出。</p>
+<p>这篇RepMLP也是一篇相关的工作，正好MLP是这突如其来的热点，他就是其中之一。</p>
+<h3 id="31-卷积和mlp处理图像的优缺点">3.1 卷积和MLP处理图像的优缺点</h3>
+<p>这篇文章很巧妙的从深度学习处理图像中几个重要的性质开始说起。即长距离建模（或者说是全局信息），位置信息以及局部先验。</p>
+<p><strong>局部先验</strong>：由于conv层只处理局部邻域，图像的局部性(即一个像素与其邻居的关系比远处的像素更密切)使得卷积神经网络在图像识别中取得了成功。这是全连接操作不会有的，因为全连接操作是全局的，每个点之间都能产生关系，就不存在什么局部的说法。<strong>这也说明了卷积操作的合理性和必要性。</strong></p>
+<blockquote>
+<p>The locality of images (i.e., a pixel is more related to its neighbors than the distant pixels) makes Convolutional Neural Network (ConvNet) successful in image recognition, as a conv layer only processes a local neighborhood. In this paper, we refer to this inductive bias as the local prior.</p>
+</blockquote>
+<p><strong>全局信息</strong>：传统的纯卷积网络当中，我们会通过不断的卷积或者encoder减小尺寸，扩大感受野来获得全局信息。事实上在transformer的工作上就是一个有丰富全局信息的方法。同样的，对比卷积来说，他缺乏局部先验，所以可能需要大量的数据来进行预训练。同样的，全连接操作是天然获取全局信息的。</p>
+<p><strong>位置信息</strong>：很多图像是有位置先验的（比如说一个人的面部，眼睛肯定是在鼻子上面的），但是卷积操作是无法利用这些位置信息的。而全连接也是天然有位置信息的，他的数据分布是排序的。</p>
+<p>综上所述，全连接天然拥有全局信息和位置信息，但是我也想要有局部先验呀。怎么办，如果是我的话，那就直接并行两条支路呗。但是，作者的野心不止于此，他想要一个纯的MLP网络。于是就是作者的老本行了，将卷积操作重参数化为MLP。</p>
+<h3 id="32-repmlp模块">3.2 RepMLP模块</h3>
+<p>在RepVGG中，训练时是多分支结构，推理时是单分支结构。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513165648418.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513165648418.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513165648418.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513165648418.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513165648418.png"
+        title="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513165648418.png" /></p>
+<p>那在RepMLP中呢?</p>
+<img src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513165754971.png" alt="image-20210513165754971" style="zoom: 80%;" />
+<p>看上图，还是颇为复杂的。左边的这个训练阶段简单拆分一下，分为三部分Global Perceptron、Partition Perceptron、Local Perceptron。</p>
+<p><strong>Global Perceptron</strong></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513171031970.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513171031970.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513171031970.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513171031970.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513171031970.png"
+        title="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513171031970.png" /></p>
+<p>顾名思义，Global Perceptron就是用于提取全局信息的模块。输入进入之后，分成了两条线。蓝线的操作就是一个reshape感觉，本质上就是将图片分patch，然后叠加在bathsize上面。但是直接这么做似乎缺乏了patch之间的相关性。于是就有了绿色的这条支路，将原图进行pooling，使得大小为patch的数量，也就是一个patch对应1个点。然后进行一系列操作。最后叠加到蓝线的输出中。</p>
+<p><strong>Partition Perceptron</strong></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513172514108.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513172514108.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513172514108.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513172514108.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513172514108.png"
+        title="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513172514108.png" /></p>
+<p>从global出来之后，通过各种reshape的操作，将图像的特征图形式的样式序列化。在进行全连接的操作。因为全连接可以天然的有位置信息，于是这个模块是可以获取位置信息的。</p>
+<p><strong>Local Perceptron</strong></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513173847796.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513173847796.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513173847796.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513173847796.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513173847796.png"
+        title="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210513173847796.png" /></p>
+<p>局部信息也就是前面提到的，卷积可以获得但全连接不能获得的信息。在训练模块中，依然使用的是卷积操作。对进来的特征图，分别进行卷积核为1，3，5，7的分组卷积，得到相对于的特征图，最后合并起来。并与Partition Perceptron的输出相加。</p>
+<p>这里还是简单的介绍了一下几个模块大概的一个情况，很多细节和具体的公式还是需要在论文中去看。这里也推荐一篇讲解（https://mp.weixin.qq.com/s/FwITC1JEG1vr2Y1ePzSvuw），将数据流都解释的很详细了，所以也不多花篇幅在这个上面了。</p>
+<h3 id="33-将卷积变成全连接怎么变">3.3 将卷积变成全连接？怎么变？</h3>
+<p>文章定义FC kernel为$\mathrm{W}^{(1)}(\mathrm{Ohw}, C h w)$，卷积的conv kernel为$\mathrm{F}(O, C, K, K)$，padding为p</p>
+<p>我们现在想要将FC操作和CONV操作给相加起来。
+$$
+\operatorname{MMUL}\left(\mathrm{M}^{(\text {in })}, \mathrm{W}^{\prime}\right)=\operatorname{MMUL}\left(\mathrm{M}^{(\mathrm{in})}, \mathrm{W}^{(1)}\right)+\mathrm{CONV}\left(\mathrm{M}^{(\mathrm{in})}, \mathrm{F}, p\right)
+$$
+希望获得这么一个结果。即，一次fn操作和一次conv操作可以用一个fn操作就给它代替掉了。</p>
+<p>我们知道，两个相同尺度的全连接操作是可以直接相加的，如果想要全连接和卷积能够相加的话，就要把卷积操作，转换成一个等价的全连接操作。也就是希望找到一个W满足下面这样的关系。也就是把卷积核的权重参数，想办法变成等价的全连接的权重参数（这是一定存在的，因为卷积本身就是一种特殊的全连接）
+$$
+\operatorname{MMUL}\left(\mathrm{M}^{(\mathrm{in})}, \mathrm{W}^{(\mathrm{F}, p)}\right)=\mathrm{CONV}\left(\mathrm{M}^{(\mathrm{in})}, \mathrm{F}, p\right)
+$$
+对于一个输入$M^{(in)}$,他要得到输出$M^{(out)}$。可以通过卷积实现，也可以通过全连接实现。如下式：
+$$
+\mathrm{M}^{(\text {out })}=\operatorname{CONV}\left(\mathrm{M}^{(\text {in })}, \mathrm{F}, p\right)=\operatorname{MMUL}\left(\mathrm{M}^{(\mathrm{in})}, \mathrm{W}^{(\mathrm{F}, p)}\right)
+$$
+下面正式看看这么做：</p>
+<p>首先定义一下全连接操作，其实也就是矩阵乘法
+$$
+\mathrm{V}^{(\text {out })}=\operatorname{MMUL}\left(\mathrm{V}^{(\text {in })}, \mathrm{W}\right)=\mathrm{V}^{(\mathrm{in})} \cdot \mathrm{W}^{\top}
+$$
+结合前面给的定义，也就是说我现在要寻找一个$\mathrm{W}^{(\mathrm{F}, p) \top}$,输入乘上这样一个矩阵，它能起到的作用等同于F为卷积核，padding p的卷积操作。下面这个$\mathrm{W}^{(\mathrm{F}, p) \top}$是我们要去寻找到哦。为了方便理解，这里也判断一下各个张量的维度，${V}^{(\text {out })} \in (Ohw)$，${V}^{(\text {in })} \in (Chw)$，$\mathrm{W}^{(\mathrm{F}, p) \top} \in (Chw,Ohw)$
+$$
+\mathrm{V}^{(\text {out })}=\mathrm{V}^{(\mathrm{in})} \cdot \mathrm{W}^{(\mathrm{F}, p) \top}
+$$
+先插入一个单位矩阵$I(Chw,Chw)$，不影响运算，值和维度都不会发生改变：
+$$
+\mathrm{V}^{(\mathrm{out})}=\mathrm{V}^{(\mathrm{in})} \cdot\left(\mathrm{I} \cdot \mathrm{W}^{(\mathrm{F}, p) \mathrm{T}}\right)
+$$
+$\mathrm{W}^{(\mathrm{F}, p) \top}$终究还是需要源自于卷积核F的（不管他是怎么变过来的），上面$(\mathrm{I} \cdot \mathrm{W}^{(\mathrm{F}, p) \mathrm{T}})$这个式子可以表示的是对$\mathrm{M}^{(\mathrm{I})}=reshape(I)$进行F卷积操作。$\mathrm{M}^{(\mathrm{I})} \in (C h w, C, h, w)$,$\mathrm{F} \in (O, C, K, K)$,$\operatorname{CONV}\left(\mathrm{M}^{(\mathrm{I})}, \mathrm{F}, p\right)$的结果的维度应该是$(Chw,O,h,w)$，再经过下面第三个公式的RS后有变成了二维的$(Chw,Ohw)$，再让输入乘以它。得到的结果刚刚好是输出想有的尺寸$(Ohw)$
+$$
+\begin{array}{c}
+\mathrm{M}^{(\mathrm{I})}=\operatorname{RS}(\mathrm{I},(C h w, C, h, w)) \\
+\mathrm{I} \cdot \mathrm{W}^{(\mathrm{F}, p) \top}=\operatorname{CONV}\left(\mathrm{M}^{(\mathrm{I})}, \mathrm{F}, p\right) \\
+\mathrm{V}^{(\mathrm{out})}=\mathrm{V}^{(\mathrm{in})} \cdot \mathrm{RS}\left(\mathrm{I} \cdot \mathrm{W}^{(\mathrm{F}, p) \top},(C h w, O h w)\right)
+\end{array}
+$$
+第一个公式意思就是将矩阵I变成4维的形式，第二个公式表示的是对I乘以这个矩阵需要等同于对的I的reshape做卷积操作。第三个式子表示，将卷积得到的重新reshape成矩阵，并让输入乘以他。</p>
+<p>前面搞了这么久，绕过来绕过去。但是我们要明确的还是，我们已知的是卷积，要求的是FC的权重剧中。结合前面的分析可以得到：
+$$
+\mathrm{W}^{(\mathrm{F}, p)}=\mathrm{RS}\left(\mathrm{CONV}\left(\mathrm{M}^{(\mathrm{I})}, \mathrm{F}, p\right),(C h w, O h w)\right)^{\top}
+$$</p>
+<p>文章最后也给了伪代码以供参考：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">Algorithm 1 PyTorch code for converting groupwsie conv into FC.
+Input: C, h, w, g, O, conv kernel, conv bias
+I = torch.eye(C * h * w // g).repeat(1, g).reshape(C * h * w // g, C, h, w)
+fc kernel = F.conv2d(I, conv kernel, padding=conv kernel.size(2)//2, groups=g)
+fc kernel = fc kernel.reshape(O * h * w // g, C * h * w).t() # Note the transpose
+fc bias = conv bias.repeat interleave(h * w)
+return: fc kernel, fc bias
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="font-colorred-34-总结和思考font"><font color='red'> 3.4 总结和思考</font></h3>
+<p>其实，我想了很久没想明白。后来，也有一点点自己的理解吧。首先明确任务，就是要将一个卷积核参数转化成全连接权重参数，他们的维度不一样。卷积是一种特殊的全连接，或者说是稀疏的全连接。如果现在拿到手一个卷积操作，不管通过手工还好，拼凑还好，肯定能变换成一个合适的全连接权重，是满足参数要求的。</p>
+<p>那么作者妙在哪里呢？他想了一个办法，使得这个过程能够很轻松的通过普通运算就能搞出来。这个转换有效，过程可微，满足了我们去训练网络非常重要的一些性质。</p>
+<p>那么是方法是什么呢？其实前面很多公式已经给出了具体过程了。其实，在我理解看来，就是利用了单位矩阵的良好性质，文章中称之为identity matrix（自身的矩阵）。在线性代数中，和单位矩阵进行乘法运算都会成为自己本身。同样的，在这里是不是可以理解为，对单位矩阵进行卷积，相当于是在保留这个卷积的运算，后续的reshape成二维也好，怎么样也好，他保存的计算属性应该是一致的，所以可以去等价的替换。</p>
+<p>不管是ACNet还是RepVgg，作者都是对卷积操作做替换。这次直接卷积到全连接。其实思路可能是好想的，因为卷积源于全连接，他们之间有着千丝万缕的联系。但是难就难在如何巧妙的转换，如何让这个过程可微又方便，所以真的很妙~</p>
+<h3 id="参考">参考</h3>
+<p>1.https://mp.weixin.qq.com/s/FwITC1JEG1vr2Y1ePzSvuw</p>
+<p>2.https://zhuanlan.zhihu.com/p/369970953</p>
+<h2 id="4do-you-even-need-attention">4、Do You Even Need Attention?</h2>
+<p><strong>原文</strong>：Do You Even Need Attention? A Stack of Feed-Forward Layers Does Surprisingly Well on ImageNet（arXiv:2105.02723）</p>
+<p><strong>论文链接</strong>: <a href="https://arxiv.org/abs/2105.02723" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2105.02723</a></p>
+<p><strong>pytorch</strong>代码:https://github.com/lukemelas/do-you-even-need-attention</p>
+<p>牛津大学的工作（居然只有一个作者），这是一篇很短的文章，仅仅只有三页。这篇短文更像一篇实验报告，可能是想让狂热的transformer稍微冷静一下下吧。</p>
+<h3 id="41-将attention层换成了feed-forward层">4.1 将attention层换成了feed-forward层</h3>
+<p>文章开篇质疑了attention的作用，认为VIT起作用不一定是因为attention。作者验证的方式就是将vit中的attention层换成了feed-forward层进行实验。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210517201707020.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210517201707020.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210517201707020.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210517201707020.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210517201707020.png"
+        title="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210517201707020.png" /></p>
+<p>实验结果表明VIT的强大性能可能更多地归因于其他因素，而不是注意力机制，例如由patch embedding和训练策略产生的影响。</p>
+<h3 id="42-具体的代码实现">4.2 具体的代码实现</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="k">class</span> <span class="nc">LinearBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">mlp_ratio</span><span class="o">=</span><span class="mf">4.</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">drop_path</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">act</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">GELU</span><span class="p">,</span>
+        <span class="n">norm</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">,</span> <span class="n">n_tokens</span><span class="o">=</span><span class="mi">197</span><span class="p">):</span> <span class="c1"># 197 = 16**2 + 1</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_path</span> <span class="o">=</span> <span class="n">DropPath</span><span class="p">(</span><span class="n">drop_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">drop_path</span> <span class="o">&gt;</span> <span class="mf">0.</span> <span class="k">else</span> <span class="n">nn</span><span class="o">.</span><span class="n">Identity</span><span class="p">()</span>
+        <span class="c1"># FF over features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp1</span> <span class="o">=</span> <span class="n">Mlp</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span> <span class="n">hidden_features</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">dim</span><span class="o">*</span><span class="n">mlp_ratio</span><span class="p">),</span> <span class="n">act</span><span class="o">=</span><span class="n">act</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="n">drop</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm1</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+        <span class="c1"># FF over patches</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp2</span> <span class="o">=</span> <span class="n">Mlp</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="n">n_tokens</span><span class="p">,</span> <span class="n">hidden_features</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">n_tokens</span><span class="o">*</span><span class="n">mlp_ratio</span><span class="p">),</span> <span class="n">act</span><span class="o">=</span><span class="n">act</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="n">drop</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm2</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">n_tokens</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mlp1</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm1</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mlp2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm2</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+    
+<span class="k">class</span> <span class="nc">Mlp</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_features</span><span class="p">,</span> <span class="n">hidden_features</span><span class="p">,</span> <span class="n">act_layer</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">GELU</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="p">,</span> <span class="n">hidden_features</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">act</span> <span class="o">=</span> <span class="n">act_layer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_features</span><span class="p">,</span> <span class="n">in_features</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">drop</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>代码也比较好看， 就是相比vit换attention为MLP</p></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-05-17</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://jqc8438.github.io/2021/05/mlp/" data-title="【论文笔记】MLP杀疯了？四篇初代MLP论文笔记" data-hashtags="MLP,结构重参数化"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://jqc8438.github.io/2021/05/mlp/" data-hashtag="MLP"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://jqc8438.github.io/2021/05/mlp/" data-title="【论文笔记】MLP杀疯了？四篇初代MLP论文笔记" data-image="/images/MLP.png"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://jqc8438.github.io/2021/05/mlp/" data-title="【论文笔记】MLP杀疯了？四篇初代MLP论文笔记" data-description=""><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="http://jqc8438.github.io/2021/05/mlp/" data-title="【论文笔记】MLP杀疯了？四篇初代MLP论文笔记"><i data-svg-src="/lib/simple-icons/icons/baidu.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://jqc8438.github.io/2021/05/mlp/" data-title="【论文笔记】MLP杀疯了？四篇初代MLP论文笔记"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/mlp/">MLP</a>,&nbsp;<a href="/tags/%E7%BB%93%E6%9E%84%E9%87%8D%E5%8F%82%E6%95%B0%E5%8C%96/">结构重参数化</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/2021/05/git/" class="prev" rel="prev" title="【Linux学习】Git学习笔记"><i class="fas fa-angle-left fa-fw"></i>【Linux学习】Git学习笔记</a>
+            <a href="/2021/10/tmux/" class="next" rel="next" title="【Linux学习】Linux-tmux">【Linux学习】Linux-tmux<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.89.4">Hugo</a> 驱动 | 主题 - <a href="https://github.com/sunt-programator/CodeIT" target="_blank" rel="noopener noreferrer" title="CodeIT 0.2.10"><i class="fas fa-laptop-code fa-fw"></i> CodeIT</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">jinhaha</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

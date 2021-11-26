@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>【论文笔记】Involution - 金哈哈的博客</title><meta name="description" content="Involution: Inverting the Inherence of Convolution for Visual Recognition"><meta property="og:title" content="【论文笔记】Involution" />
+<meta property="og:description" content="Involution: Inverting the Inherence of Convolution for Visual Recognition" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jqc8438.github.io/2021/03/involution/" /><meta property="og:image" content="http://jqc8438.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-03-14T14:09:10+08:00" />
+<meta property="article:modified_time" content="2020-03-14T14:09:10+08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://jqc8438.github.io/logo.png"/>
+
+<meta name="twitter:title" content="【论文笔记】Involution"/>
+<meta name="twitter:description" content="Involution: Inverting the Inherence of Convolution for Visual Recognition"/>
+<meta name="application-name" content="jinhaha">
+<meta name="apple-mobile-web-app-title" content="jinhaha"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://jqc8438.github.io/2021/03/involution/" /><link rel="prev" href="http://jqc8438.github.io/2021/01/repvgg/" /><link rel="next" href="http://jqc8438.github.io/2021/05/git/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "【论文笔记】Involution",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/jqc8438.github.io\/2021\/03\/involution\/"
+        },"genre": "posts","keywords": "卷积","wordcount":  1814 ,
+        "url": "http:\/\/jqc8438.github.io\/2021\/03\/involution\/","datePublished": "2021-03-14T14:09:10+08:00","dateModified": "2020-03-14T14:09:10+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "jinhaha"
+            },"description": "Involution: Inverting the Inherence of Convolution for Visual Recognition"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">('true' === 'true' && window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 归档 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="金哈哈的博客"><span class="header-title-pre"><i class='fas fa-laptop-code fa-fw'></i></span>金哈哈的blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">归档</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">【论文笔记】Involution</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>jinhaha</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"><i class="far fa-folder fa-fw"></i>论文笔记</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-03-14">2021-03-14</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1814 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="featured-image"><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/Involution.png"
+        data-srcset="/images/Involution.png, /images/Involution.png 1.5x, /images/Involution.png 2x"
+        data-sizes="auto"
+        alt="/images/Involution.png"
+        title="Involution: Inverting the Inherence of Convolution for Visual Recognition" /></div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#写在前面">写在前面</a></li>
+        <li><a href="#1简介">1.简介</a></li>
+        <li><a href="#2怎么理解卷积操作的两个重要特征spatial-agnostic--channel-specific">2.怎么理解卷积操作的两个重要特征（spatial-agnostic / channel-specific）？</a></li>
+        <li><a href="#3内卷involution的提出">3.内卷（Involution）的提出</a></li>
+        <li><a href="#4内卷核是怎么形成的">4.内卷核是怎么形成的？</a></li>
+        <li><a href="#5这个内卷操作到底是怎么操作呢">5.这个内卷操作到底是怎么操作呢？</a></li>
+        <li><a href="#6rednet">6.RedNet</a></li>
+        <li><a href="#7总结">7.总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p><strong>原文</strong>：Involution: Inverting the Inherence of Convolution for Visual Recognition</p>
+<p><strong>论文链接</strong>: <a href="https://arxiv.org/abs/2103.06255" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2103.06255</a></p>
+<p><strong>pytorch official code</strong>：https://github.com/d-li14/involution</p>
+<p><strong>笔记时间</strong>：2020.03.14</p>
+<p>文章最早发表在了CVRP2021</p>
+<h3 id="写在前面">写在前面</h3>
+<p>这是一篇搞计算操作的文章，第一次读这方面的文章，可能有些认识有些问题。期待作者的官方解读。</p>
+<h3 id="1简介">1.简介</h3>
+<p>卷积操作有两个重要的特征（spatial-agnostic and channel-specific）</p>
+<p>空间无关的特征虽然提高了效率但是剥夺了卷积核适应于不同空间位置的多种视觉模式的能力。另一方面，卷积内部的通道间冗余的问题在许多成功的深度神经网络中都很突出</p>
+<p>文章提出了与卷积相对称的内卷，具有的特性是（spatial-specific and channel-agnostic）</p>
+<p>这种操作统一了Self-Attention和卷积。</p>
+<h3 id="2怎么理解卷积操作的两个重要特征spatial-agnostic--channel-specific">2.怎么理解卷积操作的两个重要特征（spatial-agnostic / channel-specific）？</h3>
+<p>对于一个常规卷积操作来讲，从一个C1通道数的input想得到一个C2通道数的output，需要C2个卷积核。如果是3x3卷积的话，每个卷积核的尺寸是C1x3x3的。这个C1x3x3的的卷积核，我们完全可以把它看成是C1个独立的3x3的卷积核。也就是说，在生成output的每一个通道的时候，对于input的每一个通道都有一个独立的3x3的卷积核。</p>
+<p>在input的一个通道上，整个这一个通道都是复用一个卷积核的。这就是所谓的<strong>空间无关（spatial-agnostic）</strong>，我现在用什么卷积核和目前所在的空间位置没有关系，只和我现在所在的通道位置有关系。还有一种说法，这种性质叫<strong>平移不变性</strong>。</p>
+<p>而ouput中每一个通道的形成都需要依赖于input里C1个卷积核在C1个通道中的计算。这可能就叫<strong>特定于通道（channel-specific）</strong>。文章中对此的解释是：</p>
+<blockquote>
+<p>在Channel域中，卷积核的频谱负责收集编码在不同Channel中的不同信息，满足channel-specific特性</p>
+</blockquote>
+<h3 id="3内卷involution的提出">3.内卷（Involution）的提出</h3>
+<p>作者认为卷积操作的两个特征虽然也有一定的优势，但同样也有缺点。所以提出了Involution，Involution所拥有的特征正好和卷积相对称，即 <strong>spatial-specific and channel-agnostic</strong></p>
+<p>那就是<strong>通道无关和特定于空间</strong>。和卷积一样，内卷也有内卷核（involution kernels）。内卷核在空间范围上是不同的，但在通道之间共享。看到这里就有一定的画面感了。</p>
+<p>内卷的优点：</p>
+<p>1.可以在更大的空间范围中总结上下文信息，从而克服long-range interaction（本来的卷积操作只能在特定的小空间如3x3中集合空间信息）</p>
+<p>2.内卷可以将权重自适应地分配到不同的位置，从而对空间域中信息量最大的视觉元素进行优先级排序。（本来的卷积在空间的每一个地方都是用到同一个卷积核，用的同一套权重）</p>
+<h3 id="4内卷核是怎么形成的">4.内卷核是怎么形成的？</h3>
+<p>与卷积核不同，内卷核是基于单个像素的而不是其与相邻像素的关系。</p>
+<p>内卷的内卷核的形状取决于输入特征图X的尺寸。有一个kernel generation function，代表从输入生成内卷核：<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313164658324.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313164658324.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313164658324.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313164658324.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313164658324.png"
+        title="image-20210313164658324" />，即从某个像素生成到内卷核。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313165047304.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313165047304.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313165047304.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313165047304.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313165047304.png"
+        title="image-20210313165047304" /></p>
+<p>在这个生成公式中，可以看到两个W代表的是线性变化。W0将 1x1xC 的某一像素的表示通过线性变化降维到C/r (r为一个ration，代表减少比率)。σ代表的是BN和非线性激活。W2将1x1xC/r变化为KxKxG。这便是involution kernels。</p>
+<h3 id="5这个内卷操作到底是怎么操作呢">5.这个内卷操作到底是怎么操作呢？</h3>
+<p>文章中为了帮助读者理解这个内卷操作，有一张图和一段伪代码。可以结合起来理解整体的操作。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313113833089.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313113833089.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313113833089.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313113833089.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313113833089.png"
+        title="image-20210313113833089" /></p>
+<p>如上图所示，内卷核就是那个H，这里有个参数叫G，代表一个组中共享一个内卷核的数量。（在图中G为1）</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313170648785.png"
+        data-srcset="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313170648785.png, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313170648785.png 1.5x, https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313170648785.png 2x"
+        data-sizes="auto"
+        alt="https://jqc8438-pic.oss-cn-shanghai.aliyuncs.com/img/image-20210313170648785.png"
+        title="image-20210313170648785" /></p>
+<p>大概有如下步骤：</p>
+<p>1.以单个像素为条件产生内卷核</p>
+<p>2.进行乘加运算，就是先把核拉成KxKxC，与对应的位置相乘，再把KxK个1x1xC的加起来，代替原来该像素的位置</p>
+<h3 id="6rednet">6.RedNet</h3>
+<p>基于内卷的操作基础上设计了一个叫RedNet的网络，作者称可以实现优于基于卷积的ResNet和基于自我关注的图像分类模型的性能。</p>
+<p>也就是再resnet的bottleneck的位置上替换了卷积，具体可以看论文</p>
+<h3 id="7总结">7.总结</h3>
+<p>这个内卷感觉就是想把这个核同时作用在通道和空间上。同时这个核的生成又来自于单个像素点1x1xC，提取了跨通道的信息。</p>
+<p>网络学习的部分还是挺多的，要学从单个像素变成核的过程，要学经过核变出输出的过程。</p></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-03-14</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://jqc8438.github.io/2021/03/involution/" data-title="【论文笔记】Involution" data-hashtags="卷积"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="http://jqc8438.github.io/2021/03/involution/" data-hashtag="卷积"><i class="fab fa-facebook-square fa-fw"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://jqc8438.github.io/2021/03/involution/" data-title="【论文笔记】Involution" data-image="/images/Involution.png"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://jqc8438.github.io/2021/03/involution/" data-title="【论文笔记】Involution" data-description="Involution: Inverting the Inherence of Convolution for Visual Recognition"><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="http://jqc8438.github.io/2021/03/involution/" data-title="【论文笔记】Involution"><i data-svg-src="/lib/simple-icons/icons/baidu.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://jqc8438.github.io/2021/03/involution/" data-title="【论文笔记】Involution"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E5%8D%B7%E7%A7%AF/">卷积</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/2021/01/repvgg/" class="prev" rel="prev" title="【论文笔记】RepVGG"><i class="fas fa-angle-left fa-fw"></i>【论文笔记】RepVGG</a>
+            <a href="/2021/05/git/" class="next" rel="next" title="【Linux学习】Git学习笔记">【Linux学习】Git学习笔记<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreferrer" title="Hugo 0.89.4">Hugo</a> 驱动 | 主题 - <a href="https://github.com/sunt-programator/CodeIT" target="_blank" rel="noopener noreferrer" title="CodeIT 0.2.10"><i class="fas fa-laptop-code fa-fw"></i> CodeIT</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank" rel="noopener noreferrer">jinhaha</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
