@@ -1,12 +1,12 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
     <channel>
-        <title>tmux - 标签 - 金哈哈的博客</title>
-        <link>http://jqc8438.github.io/tags/tmux/</link>
-        <description>tmux - 标签 - 金哈哈的博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 21 Oct 2021 19:46:23 &#43;0800</lastBuildDate><atom:link href="http://jqc8438.github.io/tags/tmux/" rel="self" type="application/rss+xml" /><item>
+        <title>tmux - 标签 - Jinhaha&#39;s blog</title>
+        <link>https://jqc8438.top/tags/tmux/</link>
+        <description>tmux - 标签 - Jinhaha&#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 21 Oct 2021 19:46:23 &#43;0800</lastBuildDate><atom:link href="https://jqc8438.top/tags/tmux/" rel="self" type="application/rss+xml" /><item>
     <title>【Linux学习】Linux-tmux</title>
-    <link>http://jqc8438.github.io/2021/10/tmux/</link>
-    <pubDate>Thu, 21 Oct 2021 19:46:23 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/10/tmux/</guid>
+    <link>https://jqc8438.top/2021/10/tmux/</link>
+    <pubDate>Thu, 21 Oct 2021 19:46:23 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/10/tmux/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/tmux.png" referrerpolicy="no-referrer">
             </div>tmux 是一款终端复用命令行工具，一般用于Terminal 的窗口管理。]]></description>

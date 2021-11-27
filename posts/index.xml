@@ -1,75 +1,75 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
     <channel>
-        <title>所有文章 - 金哈哈的博客</title>
-        <link>http://jqc8438.github.io/posts/</link>
-        <description>所有文章 | 金哈哈的博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 10 Nov 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="http://jqc8438.github.io/posts/" rel="self" type="application/rss+xml" /><item>
+        <title>所有文章 - Jinhaha&#39;s blog</title>
+        <link>https://jqc8438.top/posts/</link>
+        <description>所有文章 | Jinhaha&#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 10 Nov 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://jqc8438.top/posts/" rel="self" type="application/rss+xml" /><item>
     <title>【论文笔记】ShuffleNet</title>
-    <link>http://jqc8438.github.io/2021/11/shufflenet/</link>
-    <pubDate>Wed, 10 Nov 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/11/shufflenet/</guid>
+    <link>https://jqc8438.top/2021/11/shufflenet/</link>
+    <pubDate>Wed, 10 Nov 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/11/shufflenet/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/ShuffleNet.png" referrerpolicy="no-referrer">
-            </div>ShuffleNet是旷视科技最近提出的一种计算高效的CNN模型，包括v1和v2]]></description>
+            </div>ShuffleNet是旷视科技提出的一种计算高效的CNN模型，包括v1和v2]]></description>
 </item><item>
     <title>【环境配置】Miniconda-不设环境变量/北外源</title>
-    <link>http://jqc8438.github.io/2021/11/miniconda/</link>
-    <pubDate>Sat, 06 Nov 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/11/miniconda/</guid>
+    <link>https://jqc8438.top/2021/11/miniconda/</link>
+    <pubDate>Sat, 06 Nov 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/11/miniconda/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/miniconda.png" referrerpolicy="no-referrer">
             </div>Miniconda is a free minimal installer for conda. It is a small, bootstrap version of Anaconda]]></description>
 </item><item>
     <title>【论文笔记】GAN基础与代码解读（GAN、CGAN、pix2pix、CycleGAN）</title>
-    <link>http://jqc8438.github.io/2021/11/gan/</link>
-    <pubDate>Tue, 02 Nov 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/11/gan/</guid>
+    <link>https://jqc8438.top/2021/11/gan/</link>
+    <pubDate>Tue, 02 Nov 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/11/gan/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/GAN.jpg" referrerpolicy="no-referrer">
             </div>（GAN、CGAN、pix2pix、CycleGAN）]]></description>
 </item><item>
     <title>【Linux学习】Linux-LVM</title>
-    <link>http://jqc8438.github.io/2021/10/lvm/</link>
-    <pubDate>Sun, 31 Oct 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/10/lvm/</guid>
+    <link>https://jqc8438.top/2021/10/lvm/</link>
+    <pubDate>Sun, 31 Oct 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/10/lvm/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/LVM.png" referrerpolicy="no-referrer">
             </div>LVM是为逻辑卷管理，它是Linux下对磁盘分区进行管理的一种机制。]]></description>
 </item><item>
     <title>【论文笔记】MobileNet</title>
-    <link>http://jqc8438.github.io/2021/10/mobilenet/</link>
-    <pubDate>Thu, 28 Oct 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/10/mobilenet/</guid>
+    <link>https://jqc8438.top/2021/10/mobilenet/</link>
+    <pubDate>Thu, 28 Oct 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/10/mobilenet/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/MobileNet.png" referrerpolicy="no-referrer">
             </div>MobileNets是为移动和嵌入式设备提出的高效模型，包括v1-v3]]></description>
 </item><item>
     <title>【Python】Python-Numpy</title>
-    <link>http://jqc8438.github.io/2021/10/numpy/</link>
-    <pubDate>Mon, 25 Oct 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/10/numpy/</guid>
+    <link>https://jqc8438.top/2021/10/numpy/</link>
+    <pubDate>Mon, 25 Oct 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/10/numpy/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/Numpy.png" referrerpolicy="no-referrer">
             </div>NumPy(Numerical Python)是Python语言的一个扩展程序库，支持大量的维度数组与矩阵运算，此外也针对数组运算提供大量的数学函数库。]]></description>
 </item><item>
     <title>【Linux学习】Linux-tmux</title>
-    <link>http://jqc8438.github.io/2021/10/tmux/</link>
-    <pubDate>Thu, 21 Oct 2021 19:46:23 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/10/tmux/</guid>
+    <link>https://jqc8438.top/2021/10/tmux/</link>
+    <pubDate>Thu, 21 Oct 2021 19:46:23 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/10/tmux/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/tmux.png" referrerpolicy="no-referrer">
             </div>tmux 是一款终端复用命令行工具，一般用于Terminal 的窗口管理。]]></description>
 </item><item>
     <title>【论文笔记】MLP杀疯了？四篇初代MLP论文笔记</title>
-    <link>http://jqc8438.github.io/2021/05/mlp/</link>
-    <pubDate>Mon, 17 May 2021 22:05:56 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/05/mlp/</guid>
+    <link>https://jqc8438.top/2021/05/mlp/</link>
+    <pubDate>Mon, 17 May 2021 22:05:56 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/05/mlp/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/MLP.png" referrerpolicy="no-referrer">
             </div>]]></description>
 </item><item>
     <title>【Linux学习】Git学习笔记</title>
-    <link>http://jqc8438.github.io/2021/05/git/</link>
-    <pubDate>Sun, 16 May 2021 19:20:32 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/05/git/</guid>
+    <link>https://jqc8438.top/2021/05/git/</link>
+    <pubDate>Sun, 16 May 2021 19:20:32 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/05/git/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/git.png" referrerpolicy="no-referrer">
             </div>git是用于Linux内核开发的版本控制工具。]]></description>
 </item><item>
     <title>【论文笔记】Involution</title>
-    <link>http://jqc8438.github.io/2021/03/involution/</link>
-    <pubDate>Sun, 14 Mar 2021 14:09:10 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/03/involution/</guid>
+    <link>https://jqc8438.top/2021/03/involution/</link>
+    <pubDate>Sun, 14 Mar 2021 14:09:10 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/03/involution/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/Involution.png" referrerpolicy="no-referrer">
             </div>Involution: Inverting the Inherence of Convolution for Visual Recognition]]></description>

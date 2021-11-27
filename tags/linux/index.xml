@@ -1,26 +1,26 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
     <channel>
-        <title>Linux - 标签 - 金哈哈的博客</title>
-        <link>http://jqc8438.github.io/tags/linux/</link>
-        <description>Linux - 标签 - 金哈哈的博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 31 Oct 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="http://jqc8438.github.io/tags/linux/" rel="self" type="application/rss+xml" /><item>
+        <title>Linux - 标签 - Jinhaha&#39;s blog</title>
+        <link>https://jqc8438.top/tags/linux/</link>
+        <description>Linux - 标签 - Jinhaha&#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 31 Oct 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://jqc8438.top/tags/linux/" rel="self" type="application/rss+xml" /><item>
     <title>【Linux学习】Linux-LVM</title>
-    <link>http://jqc8438.github.io/2021/10/lvm/</link>
-    <pubDate>Sun, 31 Oct 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/10/lvm/</guid>
+    <link>https://jqc8438.top/2021/10/lvm/</link>
+    <pubDate>Sun, 31 Oct 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/10/lvm/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/LVM.png" referrerpolicy="no-referrer">
             </div>LVM是为逻辑卷管理，它是Linux下对磁盘分区进行管理的一种机制。]]></description>
 </item><item>
     <title>【Linux学习】Linux-tmux</title>
-    <link>http://jqc8438.github.io/2021/10/tmux/</link>
-    <pubDate>Thu, 21 Oct 2021 19:46:23 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/10/tmux/</guid>
+    <link>https://jqc8438.top/2021/10/tmux/</link>
+    <pubDate>Thu, 21 Oct 2021 19:46:23 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/10/tmux/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/tmux.png" referrerpolicy="no-referrer">
             </div>tmux 是一款终端复用命令行工具，一般用于Terminal 的窗口管理。]]></description>
 </item><item>
     <title>【Linux学习】Git学习笔记</title>
-    <link>http://jqc8438.github.io/2021/05/git/</link>
-    <pubDate>Sun, 16 May 2021 19:20:32 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/05/git/</guid>
+    <link>https://jqc8438.top/2021/05/git/</link>
+    <pubDate>Sun, 16 May 2021 19:20:32 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/05/git/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/git.png" referrerpolicy="no-referrer">
             </div>git是用于Linux内核开发的版本控制工具。]]></description>

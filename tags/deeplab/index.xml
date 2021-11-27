@@ -1,12 +1,12 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
     <channel>
-        <title>Deeplab - 标签 - 金哈哈的博客</title>
-        <link>http://jqc8438.github.io/tags/deeplab/</link>
-        <description>Deeplab - 标签 - 金哈哈的博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 23 Sep 2020 14:09:10 &#43;0800</lastBuildDate><atom:link href="http://jqc8438.github.io/tags/deeplab/" rel="self" type="application/rss+xml" /><item>
+        <title>Deeplab - 标签 - Jinhaha&#39;s blog</title>
+        <link>https://jqc8438.top/tags/deeplab/</link>
+        <description>Deeplab - 标签 - Jinhaha&#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 23 Sep 2020 14:09:10 &#43;0800</lastBuildDate><atom:link href="https://jqc8438.top/tags/deeplab/" rel="self" type="application/rss+xml" /><item>
     <title>【论文笔记】Deeplab v3&#43;</title>
-    <link>http://jqc8438.github.io/2020/09/deeplabv3p/</link>
-    <pubDate>Wed, 23 Sep 2020 14:09:10 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2020/09/deeplabv3p/</guid>
+    <link>https://jqc8438.top/2020/09/deeplabv3p/</link>
+    <pubDate>Wed, 23 Sep 2020 14:09:10 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2020/09/deeplabv3p/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/deeplabv3p.png" referrerpolicy="no-referrer">
             </div>Encoder-Decoder with Atrous Separable Convolution for Semantic Image Segmentation]]></description>

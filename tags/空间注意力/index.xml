@@ -1,12 +1,12 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
     <channel>
-        <title>空间注意力 - 标签 - 金哈哈的博客</title>
-        <link>http://jqc8438.github.io/tags/%E7%A9%BA%E9%97%B4%E6%B3%A8%E6%84%8F%E5%8A%9B/</link>
-        <description>空间注意力 - 标签 - 金哈哈的博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 05 Dec 2020 09:46:59 &#43;0800</lastBuildDate><atom:link href="http://jqc8438.github.io/tags/%E7%A9%BA%E9%97%B4%E6%B3%A8%E6%84%8F%E5%8A%9B/" rel="self" type="application/rss+xml" /><item>
+        <title>空间注意力 - 标签 - Jinhaha&#39;s blog</title>
+        <link>https://jqc8438.top/tags/%E7%A9%BA%E9%97%B4%E6%B3%A8%E6%84%8F%E5%8A%9B/</link>
+        <description>空间注意力 - 标签 - Jinhaha&#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sat, 05 Dec 2020 09:46:59 &#43;0800</lastBuildDate><atom:link href="https://jqc8438.top/tags/%E7%A9%BA%E9%97%B4%E6%B3%A8%E6%84%8F%E5%8A%9B/" rel="self" type="application/rss+xml" /><item>
     <title>【论文笔记】Attention U-Net</title>
-    <link>http://jqc8438.github.io/2020/12/attunet/</link>
-    <pubDate>Sat, 05 Dec 2020 09:46:59 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2020/12/attunet/</guid>
+    <link>https://jqc8438.top/2020/12/attunet/</link>
+    <pubDate>Sat, 05 Dec 2020 09:46:59 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2020/12/attunet/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/attunet.png" referrerpolicy="no-referrer">
             </div>Attention U-Net:Learning Where to Look for the Pancreas]]></description>

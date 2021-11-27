@@ -1,12 +1,12 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
     <channel>
-        <title>LVM - 标签 - 金哈哈的博客</title>
-        <link>http://jqc8438.github.io/tags/lvm/</link>
-        <description>LVM - 标签 - 金哈哈的博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 31 Oct 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="http://jqc8438.github.io/tags/lvm/" rel="self" type="application/rss+xml" /><item>
+        <title>LVM - 标签 - Jinhaha&#39;s blog</title>
+        <link>https://jqc8438.top/tags/lvm/</link>
+        <description>LVM - 标签 - Jinhaha&#39;s blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 31 Oct 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://jqc8438.top/tags/lvm/" rel="self" type="application/rss+xml" /><item>
     <title>【Linux学习】Linux-LVM</title>
-    <link>http://jqc8438.github.io/2021/10/lvm/</link>
-    <pubDate>Sun, 31 Oct 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>http://jqc8438.github.io/2021/10/lvm/</guid>
+    <link>https://jqc8438.top/2021/10/lvm/</link>
+    <pubDate>Sun, 31 Oct 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/10/lvm/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/LVM.png" referrerpolicy="no-referrer">
             </div>LVM是为逻辑卷管理，它是Linux下对磁盘分区进行管理的一种机制。]]></description>
