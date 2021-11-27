@@ -1,12 +1,12 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
     <channel>
         <title>通道注意力 - 标签 - Jinhaha&#39;s blog</title>
-        <link>https://jqc8438.top/tags/%E9%80%9A%E9%81%93%E6%B3%A8%E6%84%8F%E5%8A%9B/</link>
+        <link>http://www.jqc8438.top/tags/%E9%80%9A%E9%81%93%E6%B3%A8%E6%84%8F%E5%8A%9B/</link>
         <description>通道注意力 - 标签 - Jinhaha&#39;s blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 08 Dec 2020 14:09:10 &#43;0800</lastBuildDate><atom:link href="https://jqc8438.top/tags/%E9%80%9A%E9%81%93%E6%B3%A8%E6%84%8F%E5%8A%9B/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 08 Dec 2020 14:09:10 &#43;0800</lastBuildDate><atom:link href="http://www.jqc8438.top/tags/%E9%80%9A%E9%81%93%E6%B3%A8%E6%84%8F%E5%8A%9B/" rel="self" type="application/rss+xml" /><item>
     <title>【论文笔记】SENet</title>
-    <link>https://jqc8438.top/2020/12/senet/</link>
-    <pubDate>Tue, 08 Dec 2020 14:09:10 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2020/12/senet/</guid>
+    <link>http://www.jqc8438.top/2020/12/senet/</link>
+    <pubDate>Tue, 08 Dec 2020 14:09:10 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://www.jqc8438.top/2020/12/senet/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/SENet.png" referrerpolicy="no-referrer">
             </div>Squeeze-and-Excitation Network]]></description>

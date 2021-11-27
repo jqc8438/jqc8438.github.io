@@ -1,12 +1,12 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
     <channel>
         <title>卷积 - 标签 - Jinhaha&#39;s blog</title>
-        <link>https://jqc8438.top/tags/%E5%8D%B7%E7%A7%AF/</link>
+        <link>http://www.jqc8438.top/tags/%E5%8D%B7%E7%A7%AF/</link>
         <description>卷积 - 标签 - Jinhaha&#39;s blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 14 Mar 2021 14:09:10 &#43;0800</lastBuildDate><atom:link href="https://jqc8438.top/tags/%E5%8D%B7%E7%A7%AF/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 14 Mar 2021 14:09:10 &#43;0800</lastBuildDate><atom:link href="http://www.jqc8438.top/tags/%E5%8D%B7%E7%A7%AF/" rel="self" type="application/rss+xml" /><item>
     <title>【论文笔记】Involution</title>
-    <link>https://jqc8438.top/2021/03/involution/</link>
-    <pubDate>Sun, 14 Mar 2021 14:09:10 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/03/involution/</guid>
+    <link>http://www.jqc8438.top/2021/03/involution/</link>
+    <pubDate>Sun, 14 Mar 2021 14:09:10 &#43;0800</pubDate><dc:creator>jinhaha</dc:creator><guid>http://www.jqc8438.top/2021/03/involution/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/Involution.png" referrerpolicy="no-referrer">
             </div>Involution: Inverting the Inherence of Convolution for Visual Recognition]]></description>

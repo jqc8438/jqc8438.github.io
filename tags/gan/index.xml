@@ -1,12 +1,12 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
     <channel>
         <title>GAN - 标签 - Jinhaha&#39;s blog</title>
-        <link>https://jqc8438.top/tags/gan/</link>
+        <link>http://www.jqc8438.top/tags/gan/</link>
         <description>GAN - 标签 - Jinhaha&#39;s blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 02 Nov 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://jqc8438.top/tags/gan/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 02 Nov 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="http://www.jqc8438.top/tags/gan/" rel="self" type="application/rss+xml" /><item>
     <title>【论文笔记】GAN基础与代码解读（GAN、CGAN、pix2pix、CycleGAN）</title>
-    <link>https://jqc8438.top/2021/11/gan/</link>
-    <pubDate>Tue, 02 Nov 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/11/gan/</guid>
+    <link>http://www.jqc8438.top/2021/11/gan/</link>
+    <pubDate>Tue, 02 Nov 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>http://www.jqc8438.top/2021/11/gan/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/GAN.jpg" referrerpolicy="no-referrer">
             </div>（GAN、CGAN、pix2pix、CycleGAN）]]></description>

@@ -1,12 +1,12 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
     <channel>
         <title>MobileNet - 标签 - Jinhaha&#39;s blog</title>
-        <link>https://jqc8438.top/tags/mobilenet/</link>
+        <link>http://www.jqc8438.top/tags/mobilenet/</link>
         <description>MobileNet - 标签 - Jinhaha&#39;s blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 28 Oct 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://jqc8438.top/tags/mobilenet/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 28 Oct 2021 00:00:00 &#43;0000</lastBuildDate><atom:link href="http://www.jqc8438.top/tags/mobilenet/" rel="self" type="application/rss+xml" /><item>
     <title>【论文笔记】MobileNet</title>
-    <link>https://jqc8438.top/2021/10/mobilenet/</link>
-    <pubDate>Thu, 28 Oct 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>https://jqc8438.top/2021/10/mobilenet/</guid>
+    <link>http://www.jqc8438.top/2021/10/mobilenet/</link>
+    <pubDate>Thu, 28 Oct 2021 00:00:00 &#43;0000</pubDate><dc:creator>jinhaha</dc:creator><guid>http://www.jqc8438.top/2021/10/mobilenet/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/MobileNet.png" referrerpolicy="no-referrer">
             </div>MobileNets是为移动和嵌入式设备提出的高效模型，包括v1-v3]]></description>
